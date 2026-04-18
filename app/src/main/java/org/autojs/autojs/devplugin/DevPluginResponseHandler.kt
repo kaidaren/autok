@@ -1,17 +1,22 @@
 package org.autojs.autojs.devplugin
 
 import android.annotation.SuppressLint
+import android.util.Log
 import com.google.gson.JsonNull
 import com.google.gson.JsonObject
 import com.stardust.app.GlobalAppContext
 import com.stardust.app.GlobalAppContext.toast
 import com.stardust.autojs.project.ProjectConfig
+import com.stardust.autojs.execution.ExecutionConfig
 import com.stardust.autojs.servicecomponents.BinderScriptListener
 import com.stardust.autojs.servicecomponents.EngineController
+import com.stardust.autojs.servicecomponents.ScriptServiceConnection
 import com.stardust.autojs.servicecomponents.TaskInfo
 import com.stardust.io.Zip
 import com.stardust.pio.PFiles
 import com.stardust.util.MD5
+import com.stardust.autojs.script.JavaScriptSource
+import com.aiselp.autox.engine.NodeScriptEngine
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
@@ -66,7 +71,7 @@ class DevPluginResponseHandler(private val cacheDir: File) : Handler {
                 runScript(id, name, script)
                 true
             }
-            .handler("stopAll") { data: JsonObject? ->
+            .handler("stopAll") { _: JsonObject? ->
                 EngineController.stopAllScript()
                 true
             })
@@ -100,7 +105,7 @@ class DevPluginResponseHandler(private val cacheDir: File) : Handler {
         val file = File(GlobalAppContext.get().cacheDir, "remote/remote-$name1")
         file.parentFile!!.mkdirs()
         file.writeText(script)
-        EngineController.runScript(file, object : BinderScriptListener {
+        val listener = object : BinderScriptListener {
             override fun onStart(taskInfo: TaskInfo) {
                 mScriptExecutions[viewId] = taskInfo.id
             }
@@ -112,7 +117,46 @@ class DevPluginResponseHandler(private val cacheDir: File) : Handler {
             override fun onException(taskInfo: TaskInfo, e: Throwable) {
                 mScriptExecutions.remove(viewId)
             }
-        })
+        }
+        // VSCode "run" command must execute in script service process,
+        // so accessibility-dependent APIs (e.g. click) see the same service instance.
+        EngineController.scope.launch(Dispatchers.IO) {
+            try {
+                val globalConnection = ScriptServiceConnection.GlobalConnection
+                globalConnection.bind(GlobalAppContext.get())
+                val engineName = when (file.extension) {
+                    "mjs" -> NodeScriptEngine.ID
+                    else -> JavaScriptSource.ENGINE
+                }
+                val taskInfo = object : TaskInfo {
+                    override val id: Int = 0
+                    override val name: String = file.name
+                    override val desc: String = file.path
+                    override val engineName: String = engineName
+                    override val workerDirectory: String = file.parent ?: "/"
+                    override val sourcePath: String = file.path
+                    override val isRunning: Boolean = false
+                }
+                Log.i(
+                    TAG,
+                    "VSCode run dispatch via script service: id=$viewId, source=${taskInfo.sourcePath}, engine=${taskInfo.engineName}"
+                )
+                globalConnection.runScript(
+                    taskInfo,
+                    listener,
+                    ExecutionConfig(workingDirectory = file.parent ?: "/")
+                )
+                Log.i(TAG, "VSCode run dispatched: id=$viewId")
+            } catch (t: Throwable) {
+                Log.e(
+                    TAG,
+                    "VSCode run dispatch failed: id=$viewId, source=${file.path}",
+                    t
+                )
+                mScriptExecutions.remove(viewId)
+                toast(t.message ?: "VSCode run dispatch failed")
+            }
+        }
 
     }
 

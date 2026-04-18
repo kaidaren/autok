@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Kinetic Input Field - White Container on Dark Surface -->
+<!-- Uses surface-container-lowest (white) with ghost border -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/kinetic_surface_container_lowest" />
+    <stroke
+        android:width="0.5dp"
+        android:color="@color/kinetic_outline_variant" />
+    <corners android:radius="@dimen/kinetic_radius_xl" />
+</shape>

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -54,7 +55,6 @@ import org.autojs.autojs.timing.TimedTask
 import org.autojs.autojs.timing.TimedTaskManager.intentTaskChanges
 import org.autojs.autojs.timing.TimedTaskManager.timeTaskChanges
 import org.autojs.autojs.ui.explorer.FileIcon
-import org.autojs.autojs.ui.explorer.FileInfo
 import org.autojs.autojs.ui.main.task.Task.PendingTask
 import org.autojs.autojs.ui.main.task.TaskGroup.PendingTaskGroup
 import org.autojs.autojs.ui.main.task.TaskGroup.RunningTaskGroup
@@ -288,12 +288,14 @@ fun TaskGroup(title: String, expanded: Boolean, onClick: () -> Unit) {
             Icon(
                 modifier = Modifier.rotate(rotation),
                 imageVector = Icons.Outlined.KeyboardArrowDown,
-                contentDescription = null
+                contentDescription = null,
+                tint = Color(0xFFA8ABB3)
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
                 text = title,
-                style = MaterialTheme.typography.labelMedium
+                style = MaterialTheme.typography.labelMedium,
+                color = Color(0xFFA8ABB3)
             )
         }
     }
@@ -312,7 +314,19 @@ private fun TaskItem(
     ) {
         FileIcon(item.firstChar, item.firstCharBackground)
         Spacer(Modifier.width(16.dp))
-        FileInfo(modifier = Modifier.weight(1f), name = item.name, desc = item.desc)
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = item.name,
+                color = Color(0xFFF1F3FC),
+                maxLines = 1
+            )
+            Text(
+                text = item.desc,
+                color = Color(0xFFA8ABB3),
+                maxLines = 1,
+                fontSize = MaterialTheme.typography.bodySmall.fontSize
+            )
+        }
         Row(verticalAlignment = Alignment.CenterVertically) {
             val tint = Color(0xFFA9AAAB)
             val iconModifier = Modifier.size(24.dp)

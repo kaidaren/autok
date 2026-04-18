@@ -206,14 +206,22 @@ public class CircularMenuWindow extends FloatyWindow {
 
     public void close() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        preferences.edit()
-                .putInt(KEY_POSITION_X, mActionViewWindowBridge.getX())
-                .putInt(KEY_POSITION_Y, mActionViewWindowBridge.getY())
-                .apply();
+        if (mActionViewWindowBridge != null) {
+            preferences.edit()
+                    .putInt(KEY_POSITION_X, mActionViewWindowBridge.getX())
+                    .putInt(KEY_POSITION_Y, mActionViewWindowBridge.getY())
+                    .apply();
+        }
         try {
-            mOrientationEventListener.disable();
-            getWindowManager().removeView(mCircularActionMenu);
-            getWindowManager().removeView(mCircularActionView);
+            if (mOrientationEventListener != null) {
+                mOrientationEventListener.disable();
+            }
+            if (mCircularActionMenu != null) {
+                getWindowManager().removeView(mCircularActionMenu);
+            }
+            if (mCircularActionView != null) {
+                getWindowManager().removeView(mCircularActionView);
+            }
             FloatyService.removeWindow(this);
         } catch (Exception e) {
             e.printStackTrace();

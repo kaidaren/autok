@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,23 +15,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
-import coil.compose.rememberAsyncImagePainter
 import com.aiselp.autox.ui.material3.theme.AppTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -82,29 +79,19 @@ class SplashActivity : AppCompatActivity() {
                     Box(
                         modifier = Modifier
                             .weight(1f)
-                            .fillMaxWidth(), contentAlignment = Alignment.Center
+                            .fillMaxWidth(),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Image(
-                                painter = rememberAsyncImagePainter(R.drawable.autojs_logo1),
-                                contentDescription = null,
-                                modifier = Modifier.size(120.dp),
-                            )
+                        val powered = stringResource(id = R.string.powered_by_autojs)
+                        if (powered.isNotBlank()) {
                             Text(
-                                text = stringResource(id = R.string.app_name),
-                                color = MaterialTheme.colorScheme.primary,
-                                fontSize = 24.sp
+                                text = powered,
+                                color = Color(0xdd000000),
+                                fontSize = 14.sp,
+                                modifier = Modifier.padding(12.dp)
                             )
                         }
                     }
-                    Text(
-                        text = stringResource(id = R.string.powered_by_autojs),
-                        color = Color(0xdd000000),
-                        fontSize = 14.sp,
-                        modifier = Modifier
-                            .padding(12.dp)
-                            .align(Alignment.CenterHorizontally)
-                    )
                     Spacer(
                         modifier = Modifier
                             .windowInsetsBottomHeight(WindowInsets.navigationBars)

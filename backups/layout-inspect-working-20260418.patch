@@ -1,0 +1,156 @@
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+index b3e5174a..aa8f405c 100644
+--- a/app/src/main/AndroidManifest.xml
++++ b/app/src/main/AndroidManifest.xml
+@@ -101,7 +101,7 @@
+         android:label="${appName}"
+         android:largeHeap="true"
+         android:requestLegacyExternalStorage="true"
+-        android:roundIcon="@drawable/autojs_logo"
++        android:roundIcon="@mipmap/ic_launcher_round"
+         android:supportsRtl="true"
+         android:theme="@style/AppTheme"
+         android:usesCleartextTraffic="true"
+@@ -126,6 +126,12 @@
+             android:name="org.autojs.autojs.ui.main.MainActivity"
+             android:exported="true"
+             android:launchMode="singleTask" />
++        <activity
++            android:name="org.autojs.autojs.devplugin.ScreenCaptureGuideActivity"
++            android:excludeFromRecents="true"
++            android:exported="false"
++            android:launchMode="singleTop"
++            android:theme="@style/M3AppTheme" />
+ 
+         <provider
+             android:name="org.autojs.autojs.external.fileprovider.AppFileProvider"
+@@ -144,6 +150,13 @@
+             android:process="@string/text_script_process_name"
+             android:taskAffinity="org.autojs.autojs.edit"
+             android:theme="@style/EditorTheme" />
++        <activity
++            android:name="org.autojs.autojs.ui.kinetic.editor.KineticEditorActivity"
++            android:configChanges="orientation|screenSize|uiMode"
++            android:launchMode="standard"
++            android:process="@string/text_script_process_name"
++            android:taskAffinity="org.autojs.autojs.edit"
++            android:theme="@style/M3AppTheme" />
+         <activity
+             android:name="org.autojs.autojs.ui.settings.AboutActivity"
+             android:theme="@style/M3AppTheme" />
+@@ -185,7 +198,7 @@
+         <activity-alias
+             android:name=".external.tasker.PluginActivity"
+             android:exported="true"
+-            android:icon="@drawable/ic_android_eat_js"
++            android:icon="@mipmap/ic_launcher"
+             android:label="${appName}"
+             android:targetActivity="org.autojs.autojs.external.tasker.TaskPrefEditActivity"
+             tools:ignore="ExportedActivity">
+@@ -280,7 +293,7 @@
+             android:name="org.autojs.autojs.external.open.RunIntentActivity"
+             android:enabled="false"
+             android:exported="true"
+-            android:icon="@drawable/autojs_logo"
++            android:icon="@mipmap/ic_launcher"
+             android:label="@string/text_run_script"
+             android:taskAffinity=".external.open.RunIntentActivity"
+             android:theme="@android:style/Theme.NoDisplay" />
+@@ -289,7 +302,7 @@
+             android:excludeFromRecents="true"
+             android:exported="true"
+             android:launchMode="singleInstance"
+-            android:icon="@drawable/autojs_logo"
++            android:icon="@mipmap/ic_launcher"
+             android:label="@string/app_name"
+             android:theme="@style/M3AppTheme.Transparent">
+             <intent-filter>
+@@ -308,6 +321,11 @@
+         <service
+             android:name="org.autojs.autojs.ui.floating.FloatyAutoService"
+             android:process="@string/text_script_process_name" />
++        <service
++            android:name="com.stardust.autojs.core.accessibility.AccessibilityService"
++            android:process="@string/text_script_process_name"
++            tools:node="merge"
++            tools:replace="android:process" />
+ 
+         <receiver
+             android:name="org.autojs.autojs.external.widget.ScriptWidget"
+diff --git a/app/src/main/java/org/autojs/autojs/external/tile/LayoutInspectTileService.kt b/app/src/main/java/org/autojs/autojs/external/tile/LayoutInspectTileService.kt
+index ce5598ec..ca6833b9 100644
+--- a/app/src/main/java/org/autojs/autojs/external/tile/LayoutInspectTileService.kt
++++ b/app/src/main/java/org/autojs/autojs/external/tile/LayoutInspectTileService.kt
+@@ -78,13 +78,24 @@ abstract class LayoutInspectTileService : TileService(), CaptureAvailableListene
+             delay(500)
+             dialog.dismiss()
+             if (AccessibilityService.instance == null) {
+-                toast(
+-                    this@LayoutInspectTileService,
+-                    R.string.text_no_accessibility_permission_to_capture
+-                )
+-                AccessibilityServiceTool.goToAccessibilitySetting()
+-                inactive()
+-                return@launch
++                if (!AccessibilityServiceTool.isAccessibilityServiceEnabled(this@LayoutInspectTileService)) {
++                    toast(
++                        this@LayoutInspectTileService,
++                        R.string.text_no_accessibility_permission_to_capture
++                    )
++                    AccessibilityServiceTool.goToAccessibilitySetting()
++                    inactive()
++                    return@launch
++                }
++                AccessibilityService.waitForEnabled(2500)
++                if (AccessibilityService.instance == null) {
++                    toast(
++                        this@LayoutInspectTileService,
++                        R.string.text_accessibility_bound_retry_after_wait
++                    )
++                    inactive()
++                    return@launch
++                }
+             }
+             mCapturing = true
+             delay(200)
+diff --git a/app/src/main/java/org/autojs/autojs/ui/floating/CircularMenu.kt b/app/src/main/java/org/autojs/autojs/ui/floating/CircularMenu.kt
+index d293f294..0f3d89e5 100644
+--- a/app/src/main/java/org/autojs/autojs/ui/floating/CircularMenu.kt
++++ b/app/src/main/java/org/autojs/autojs/ui/floating/CircularMenu.kt
+@@ -40,6 +40,7 @@ import com.stardust.autojs.core.record.Recorder
+ import com.stardust.enhancedfloaty.FloatyService
+ import com.stardust.enhancedfloaty.FloatyWindow
+ import com.stardust.toast
++import com.stardust.view.accessibility.AccessibilityService
+ import com.stardust.util.ClipboardUtil
+ import com.stardust.view.accessibility.AccessibilityService.Companion.instance
+ import com.stardust.view.accessibility.LayoutInspector.CaptureAvailableListener
+@@ -254,9 +255,16 @@ class CircularMenu(context: Context?) : Recorder.OnStateChangedListener, Capture
+ 
+     private fun inspectLayout(windowCreator: (NodeInfo?) -> FloatyWindow?) {
+         if (instance == null) {
+-            toast(mContext, R.string.text_no_accessibility_permission_to_capture)
+-            AccessibilityServiceTool.goToAccessibilitySetting()
+-            return
++            if (!AccessibilityServiceTool.isAccessibilityServiceEnabled(mContext)) {
++                toast(mContext, R.string.text_no_accessibility_permission_to_capture)
++                AccessibilityServiceTool.goToAccessibilitySetting()
++                return
++            }
++            AccessibilityService.waitForEnabled(2500)
++            if (instance == null) {
++                toast(mContext, R.string.text_accessibility_bound_retry_after_wait)
++                return
++            }
+         }
+         val progress = ComposeDialog(mContext).apply {
+             setContent {
+@@ -409,6 +417,6 @@ class CircularMenu(context: Context?) : Recorder.OnStateChangedListener, Capture
+         const val STATE_CLOSED = -1
+         const val STATE_NORMAL = 0
+         const val STATE_RECORDING = 1
+-        private val IC_ACTION_VIEW = R.drawable.ic_android_eat_js
++        private val IC_ACTION_VIEW = R.mipmap.ic_launcher
+     }
+ }
+\ No newline at end of file

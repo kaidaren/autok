@@ -40,6 +40,7 @@ import com.stardust.autojs.core.record.Recorder
 import com.stardust.enhancedfloaty.FloatyService
 import com.stardust.enhancedfloaty.FloatyWindow
 import com.stardust.toast
+import com.stardust.view.accessibility.AccessibilityService
 import com.stardust.util.ClipboardUtil
 import com.stardust.view.accessibility.AccessibilityService.Companion.instance
 import com.stardust.view.accessibility.LayoutInspector.CaptureAvailableListener
@@ -254,9 +255,16 @@ class CircularMenu(context: Context?) : Recorder.OnStateChangedListener, Capture
 
     private fun inspectLayout(windowCreator: (NodeInfo?) -> FloatyWindow?) {
         if (instance == null) {
-            toast(mContext, R.string.text_no_accessibility_permission_to_capture)
-            AccessibilityServiceTool.goToAccessibilitySetting()
-            return
+            if (!AccessibilityServiceTool.isAccessibilityServiceEnabled(mContext)) {
+                toast(mContext, R.string.text_no_accessibility_permission_to_capture)
+                AccessibilityServiceTool.goToAccessibilitySetting()
+                return
+            }
+            AccessibilityService.waitForEnabled(2500)
+            if (instance == null) {
+                toast(mContext, R.string.text_accessibility_bound_retry_after_wait)
+                return
+            }
         }
         val progress = ComposeDialog(mContext).apply {
             setContent {
@@ -409,6 +417,6 @@ class CircularMenu(context: Context?) : Recorder.OnStateChangedListener, Capture
         const val STATE_CLOSED = -1
         const val STATE_NORMAL = 0
         const val STATE_RECORDING = 1
-        private val IC_ACTION_VIEW = R.drawable.ic_android_eat_js
+        private val IC_ACTION_VIEW = R.mipmap.ic_launcher
     }
 }

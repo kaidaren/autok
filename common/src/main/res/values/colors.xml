@@ -32,4 +32,97 @@
     <color name="on_surface">#FF000000</color>
     <color name="on_secondary">#FFFFFFFF</color>
     <color name="on_background">#FF000000</color>
+
+    <!-- ============================================================ -->
+    <!-- DARK THEME - Accessibility Inspector (Screen 1) -->
+    <!-- ============================================================ -->
+    <!-- 深色主题 - 翠绿色 + 深灰色 -->
+    <color name="dark_bg_primary">#18181b</color>
+    <color name="dark_bg_secondary">#27272a</color>
+    <color name="dark_text_primary">#ffffff</color>
+    <color name="dark_text_secondary">#a1a1a6</color>
+    <color name="dark_accent_emerald">#10b981</color>
+    <color name="dark_accent_emerald_light">#34d399</color>
+    <color name="dark_border">#404040</color>
+
+    <!-- ============================================================ -->
+    <!-- GREEN THEME - Script Editor (Screen 2) -->
+    <!-- ============================================================ -->
+    <!-- 绿色主题 - 荧光绿 + 深蓝 -->
+    <color name="green_bg_dark">#0a0e14</color>
+    <color name="green_bg_surface">#0f141a</color>
+    <color name="green_bg_container">#151a21</color>
+    <color name="green_bg_container_high">#1b2028</color>
+    <color name="green_bg_container_lowest">#000000</color>
+    <color name="green_primary">#9cff93</color>
+    <color name="green_primary_dim">#00ec3b</color>
+    <color name="green_primary_fixed">#00fc40</color>
+    <color name="green_secondary">#00f4fe</color>
+    <color name="green_secondary_dim">#00e5ee</color>
+    <color name="green_tertiary">#ff59e3</color>
+    <color name="green_tertiary_dim">#ff59e3</color>
+    <color name="green_text_primary">#f1f3fc</color>
+    <color name="green_text_secondary">#a8abb3</color>
+    <color name="green_outline">#72757d</color>
+    <color name="green_outline_variant">#44484f</color>
+
+    <!-- ============================================================ -->
+    <!-- KINETIC DESIGN SYSTEM - Color Palette -->
+    <!-- ============================================================ -->
+
+    <!-- Primary Colors -->
+    <color name="kinetic_primary">#00E7FF</color>
+    <color name="kinetic_primary_container">#B5F5FF</color>
+    <color name="kinetic_on_primary">#003B42</color>
+    <color name="kinetic_on_primary_container">#00292F</color>
+
+    <!-- Secondary Colors -->
+    <color name="kinetic_secondary">#4FC3F7</color>
+    <color name="kinetic_secondary_container">#80DEEA</color>
+    <color name="kinetic_on_secondary">#00363D</color>
+    <color name="kinetic_on_secondary_container">#004D52</color>
+
+    <!-- Tertiary Colors -->
+    <color name="kinetic_tertiary">#26C6DA</color>
+    <color name="kinetic_tertiary_container">#80DEEA</color>
+    <color name="kinetic_on_tertiary">#00363D</color>
+    <color name="kinetic_on_tertiary_container">#004D52</color>
+
+    <!-- Error Colors -->
+    <color name="kinetic_error">#F44336</color>
+    <color name="kinetic_error_container">#FFCDD2</color>
+    <color name="kinetic_on_error">#FFFFFF</color>
+    <color name="kinetic_on_error_container">#B71C1C</color>
+
+    <!-- Neutral Colors - Surface Hierarchy -->
+    <color name="kinetic_surface">#F5F7F9</color>
+    <color name="kinetic_surface_dim">#DDE1E5</color>
+    <color name="kinetic_surface_bright">#FFFFFF</color>
+
+    <!-- Surface Container Levels (for tonal layering) -->
+    <color name="kinetic_surface_container_lowest">#FFFFFF</color>
+    <color name="kinetic_surface_container_low">#EEF1F3</color>
+    <color name="kinetic_surface_container">#E8ECEF</color>
+    <color name="kinetic_surface_container_high">#DFE3E6</color>
+    <color name="kinetic_surface_container_highest">#D9DDE0</color>
+
+    <!-- On Surface Colors -->
+    <color name="kinetic_on_surface">#1A1C1E</color>
+    <color name="kinetic_on_surface_variant">#595C5E</color>
+
+    <!-- Outline Colors -->
+    <color name="kinetic_outline">#79747E</color>
+    <color name="kinetic_outline_variant">#CAC7D0</color>
+
+    <!-- Special Effects -->
+    <color name="kinetic_scrim">#000000</color>
+    <color name="kinetic_scrim_semi_transparent">#60000000</color>
+
+    <!-- Background -->
+    <color name="kinetic_background">#FFFBFE</color>
+
+    <!-- Glass Morphism Support -->
+    <color name="kinetic_glass_light">#F5F7F9CC</color>
+    <color name="kinetic_glass_dark">#1F282F99</color>
+
 </resources>

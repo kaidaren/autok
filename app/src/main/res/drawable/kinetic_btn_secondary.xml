@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Kinetic Button - Secondary Background -->
+<!-- Tonal color without border -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/kinetic_surface_container" />
+    <corners android:radius="@dimen/kinetic_radius_xl" />
+</shape>

@@ -1,14 +1,34 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="AppTheme.Kinetic" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <!-- Primary Colors -->
+        <item name="colorPrimary">@color/kinetic_primary</item>
+        <item name="colorPrimaryDark">@color/kinetic_surface_container_high</item>
+        <item name="colorAccent">@color/kinetic_secondary</item>
+        
+        <!-- Text Colors -->
+        <item name="android:textColorPrimary">@color/kinetic_on_surface</item>
+        <item name="android:textColorSecondary">@color/kinetic_on_surface_variant</item>
+        <item name="android:textColorTertiary">@color/kinetic_outline</item>
+        
+        <!-- Window & Background -->
+        <item name="android:windowBackground">@color/kinetic_surface</item>
+        <item name="android:itemBackground">@color/kinetic_surface_container_low</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/kinetic_surface</item>
+        <item name="android:navigationBarColor">@color/kinetic_surface</item>
+        
+        <!-- Dividers & Borders (Ghost Border - 15% opacity) -->
+        <item name="android:divider">@color/kinetic_outline_variant</item>
+        <item name="android:dividerHeight">1dp</item>
+        
+        <!-- Status Bar Style (light text on dark surface) -->
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="AppTheme" parent="AppTheme.Kinetic">
         <item name="android:textColorPrimary">@color/text_color_secondary</item>
         <item name="android:textColorSecondary">@color/text_color_thirdly</item>
-        <item name="android:windowBackground">@color/background</item>
-        <item name="android:itemBackground">@color/item_background</item>
-        <item name="itemBackgroundDark">@color/item_background_dark</item>
         <item name="android:divider">@color/divider</item>
         <item name="drawer_item_text_color">@color/drawer_menu_item_text_color</item>
         <item name="drawer_group_text_color">@color/drawer_menu_group_text_color</item>
@@ -18,6 +38,151 @@
         <item name="android:textColorPrimary">@color/toolbar</item>
         <item name="android:textColorSecondary">@color/toolbar</item>
         <item name="actionMenuTextColor">@color/toolbar</item>
+    </style>
+
+    <!-- ============================================================ -->
+    <!-- Button Styles - Primary, Secondary, Tertiary -->
+    <!-- ============================================================ -->
+    
+    <style name="KineticButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:textColor">@color/kinetic_on_primary</item>
+        <item name="android:backgroundTint">@color/kinetic_primary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.05</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+    
+    <style name="KineticButtonSecondary" parent="Widget.AppCompat.Button">
+        <item name="android:textColor">@color/kinetic_on_surface</item>
+        <item name="android:background">@color/kinetic_surface_container</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+    
+    <!-- ============================================================ -->
+    <!-- Text Field Styles -->
+    <!-- ============================================================ -->
+    
+    <style name="KineticTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">@color/kinetic_surface_container_lowest</item>
+        <item name="boxStrokeColor">@color/kinetic_outline_variant</item>
+        <item name="boxStrokeErrorColor">@color/kinetic_tertiary</item>
+        <item name="boxStrokeWidth">0.5dp</item>
+        <item name="boxCornerRadiusTopStart">8dp</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxCornerRadiusBottomStart">8dp</item>
+        <item name="boxCornerRadiusBottomEnd">8dp</item>
+        <item name="hintTextColor">@color/kinetic_on_surface_variant</item>
+        <item name="android:textColorHint">@color/kinetic_on_surface_variant</item>
+    </style>
+    
+    <!-- ============================================================ -->
+    <!-- Typography Styles -->
+    <!-- Space Grotesk for Headlines, Inter for Body, Mono for Code -->
+    <!-- ============================================================ -->
+    
+    <style name="KineticDisplayLarge" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">57sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/kinetic_on_surface</item>
+        <item name="android:letterSpacing">-0.02</item>
+    </style>
+    
+    <style name="KineticHeadlineSmall" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/kinetic_on_surface</item>
+        <item name="android:letterSpacing">-0.02</item>
+    </style>
+    
+    <style name="KineticBodyMedium" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/kinetic_on_surface</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+    </style>
+    
+    <style name="KineticLabelSmall" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/kinetic_on_surface_variant</item>
+        <item name="android:letterSpacing">0.05</item>
+    </style>
+    
+    <!-- ============================================================ -->
+    <!-- Card & Container Styles -->
+    <!-- ============================================================ -->
+    
+    <style name="KineticCard" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/kinetic_surface_container_lowest</item>
+        <item name="cardElevation">0dp</item>
+        <item name="strokeColor">@color/kinetic_outline_variant</item>
+        <item name="strokeWidth">0.5dp</item>
+        <item name="cardCornerRadius">12dp</item>
+        <item name="contentPadding">16dp</item>
+    </style>
+    
+    <style name="KineticContainer">
+        <item name="android:background">@color/kinetic_surface_container</item>
+    </style>
+    
+    <!-- ============================================================ -->
+    <!-- ToolBar Style -->
+    <!-- ============================================================ -->
+    
+    <style name="KineticToolbarStyle" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:textColorPrimary">@color/kinetic_on_surface</item>
+        <item name="android:textColorSecondary">@color/kinetic_on_surface_variant</item>
+        <item name="actionMenuTextColor">@color/kinetic_on_surface</item>
+        <item name="android:background">@color/kinetic_surface</item>
+        <item name="android:elevation">4dp</item>
+    </style>
+    
+    <!-- ============================================================ -->
+    <!-- Chip Styles - Status Indicators -->
+    <!-- ============================================================ -->
+    
+    <style name="KineticChip" parent="Widget.MaterialComponents.Chip.Action">
+        <item name="chipBackgroundColor">@color/kinetic_surface_container_high</item>
+        <item name="chipStrokeColor">@color/kinetic_outline_variant</item>
+        <item name="android:textColor">@color/kinetic_on_surface</item>
+        <item name="chipEndPadding">8dp</item>
+        <item name="chipStartPadding">8dp</item>
+        <item name="chipMinHeight">32dp</item>
+    </style>
+    
+    <style name="KineticChipPrimary" parent="KineticChip">
+        <item name="chipBackgroundColor">@color/kinetic_primary_container</item>
+        <item name="android:textColor">@color/kinetic_on_primary_container</item>
+    </style>
+    
+    <!-- ============================================================ -->
+    <!-- BottomAppBar & Navigation Styles -->
+    <!-- ============================================================ -->
+    
+    <style name="KineticBottomAppBar">
+        <item name="android:background">@color/kinetic_surface_container_low</item>
+        <item name="elevation">8dp</item>
+    </style>
+    
+    <!-- ============================================================ -->
+    <!-- Dialog Styles -->
+    <!-- ============================================================ -->
+    
+    <style name="KineticDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@color/kinetic_surface_container</item>
+        <item name="android:textColorPrimary">@color/kinetic_on_surface</item>
+        <item name="android:textColorSecondary">@color/kinetic_on_surface_variant</item>
     </style>
 
     <style name="EditorTheme" parent="AppTheme">

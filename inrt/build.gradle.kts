@@ -109,13 +109,15 @@ android {
 
 }
 
-android.applicationVariants.all {
-    val variant = this
-    if (variant.flavorName == "template") {
-        mergeAssetsProvider.configure {
-            doLast {
+afterEvaluate {
+    android.applicationVariants.all {
+        if (flavorName == "template") {
+            val mergeTask = mergeAssetsProvider.get()
+            val outputDirProvider = mergeTask.outputDir
+            mergeTask.doLast {
+                val outDir = outputDirProvider.get().asFile
                 delete(
-                    fileTree(outputDir) {
+                    fileTree(outDir) {
                         include(
                             "models/**/*",
                             "mlkit-google-ocr-models/**/*",
@@ -126,7 +128,6 @@ android.applicationVariants.all {
             }
         }
     }
-
 }
 
 

@@ -11,8 +11,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,17 +51,29 @@ fun MenuTopAppBar(
     actions: @Composable (RowScope.() -> Unit) = {},
 ) {
     TopAppBar(
-        title = { Text(text = title) },
+        title = {
+            Text(
+                text = title,
+                color = Color(0xFF9CFF93),
+                fontSize = 26.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+        },
         actions = actions,
         navigationIcon = {
             if (showMenuButton) {
                 IconButton(onClick = openMenuRequest) {
                     Icon(
                         Icons.Filled.Menu,
-                        contentDescription = null
+                        contentDescription = null,
+                        tint = Color(0x66FFFFFF)
                     )
                 }
             }
-        }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color(0xFF020408),
+            scrolledContainerColor = Color(0xFF020408)
+        )
     )
 }

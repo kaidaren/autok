@@ -115,12 +115,12 @@ android {
             versionCode = versions.devVersionCode
             versionName = versions.devVersionName
             buildConfigField("String", "CHANNEL", "\"v7\"")
-            manifestPlaceholders.putAll(mapOf("appName" to "Autox.js v7"))
+            manifestPlaceholders.putAll(mapOf("appName" to "@string/app_name"))
         }
         create("v7_mini") {
             applicationIdSuffix = ".v7"
             buildConfigField("String", "CHANNEL", "\"v7\"")
-            manifestPlaceholders.putAll(mapOf("appName" to "Autox.js v7"))
+            manifestPlaceholders.putAll(mapOf("appName" to "@string/app_name"))
         }
     }
     applicationVariants.all {
@@ -257,19 +257,6 @@ dependencies {
     implementation(libs.coil.compose)
 }
 
-fun copyTemplateToAPP(isDebug: Boolean, to: File) {
-    val outName = if (isDebug) "template-debug" else "template-release"
-    val outFile = project(":inrt").buildOutputs.named(outName).get().outputFile
-//    logger.error("buildTemplate from: $outFile")
-    copy {
-        from(outFile)
-        into(to)
-        delete(File(to, "template.apk"))
-        rename(outFile.name, "template.apk")
-    }
-    logger.info("buildTemplate success, debugMode: $isDebug")
-}
-
 val assetsDir = File(projectDir, "src/main/assets")
 if (!File(assetsDir, "template.apk").isFile) {
     tasks.named("preBuild").dependsOn("buildTemplateApp")
@@ -278,15 +265,32 @@ if (!File(assetsDir, "template.apk").isFile) {
 tasks.register("buildTemplateApp") {
     group = "build"
     dependsOn(":inrt:assembleTemplateRelease")
+    val targetDir = assetsDir
+    // Resolve path at configuration time without holding a Project reference
+    val inrtOutputFile = File(rootProject.projectDir, "inrt/build/outputs/apk/template/release/inrt-template-release.apk")
     doFirst {
-        copyTemplateToAPP(false, assetsDir)
+        copy {
+            from(inrtOutputFile)
+            into(targetDir)
+            delete(File(targetDir, "template.apk"))
+            rename(inrtOutputFile.name, "template.apk")
+        }
+        logger.info("buildTemplate success, debugMode: false")
     }
 }
 tasks.register("buildDebugTemplateApp") {
     group = "build"
     dependsOn(":inrt:assembleTemplateDebug")
+    val targetDir = assetsDir
+    val inrtOutputFile = File(rootProject.projectDir, "inrt/build/outputs/apk/template/debug/inrt-template-debug.apk")
     doFirst {
-        copyTemplateToAPP(true, assetsDir)
+        copy {
+            from(inrtOutputFile)
+            into(targetDir)
+            delete(File(targetDir, "template.apk"))
+            rename(inrtOutputFile.name, "template.apk")
+        }
+        logger.info("buildTemplate success, debugMode: true")
     }
 }
 tasks.named("clean").configure {
@@ -337,4 +341,21 @@ tasks.register("buildDocs") {
         }
         buildFile.delete()
     }
+}
+
+// Copy AutoX_Docs (markdown + public assets) into app assets for offline docs.
+// Use a cache-friendly task type (Sync) to support configuration cache.
+val autoXDocsSrcDir = rootProject.layout.projectDirectory.dir("AutoX_Docs/docs")
+val autoXDocsTargetDir = layout.projectDirectory.dir("src/main/assets/docs/autox")
+
+tasks.register<Sync>("copyAutoXDocs") {
+    group = "build"
+    from(autoXDocsSrcDir)
+    into(autoXDocsTargetDir)
+    // Sync cleans the target dir by default (keeps it identical to source).
+}
+
+// Ensure docs are available before build (debug/release).
+tasks.named("preBuild").configure {
+    dependsOn("copyAutoXDocs")
 }

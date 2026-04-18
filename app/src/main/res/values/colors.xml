@@ -1,35 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#009688</color>
-    <color name="colorPrimaryDark">#009688</color>
-    <color name="colorAccent">#03a9f4</color>
+    <!-- ============================================================ -->
+    <!-- KINETIC DESIGN SYSTEM COLORS -->
+    <!-- The Kinetic Architect: Technical precision meets organic motion -->
+    <!-- ============================================================ -->
+    
+    <!-- Primary Colors - Vibrant Green (激光指针) -->
+    <color name="kinetic_primary">#9cff93</color>
+    <color name="kinetic_primary_container">#00fc40</color>
+    <color name="kinetic_primary_fixed">#00fc40</color>
+    <color name="kinetic_primary_fixed_dim">#00ec3b</color>
+    <color name="kinetic_primary_dim">#00ec3b</color>
+    <color name="kinetic_on_primary">#006413</color>
+    <color name="kinetic_on_primary_fixed">#00440a</color>
+    <color name="kinetic_on_primary_fixed_variant">#006513</color>
+    <color name="kinetic_on_primary_container">#005a10</color>
+    <color name="kinetic_inverse_primary">#006f16</color>
+    
+    <!-- Secondary Colors - Cyan/Turquoise -->
+    <color name="kinetic_secondary">#00f4fe</color>
+    <color name="kinetic_secondary_container">#00696e</color>
+    <color name="kinetic_secondary_fixed">#00f4fe</color>
+    <color name="kinetic_secondary_fixed_dim">#00e5ee</color>
+    <color name="kinetic_secondary_dim">#00e5ee</color>
+    <color name="kinetic_on_secondary">#00575b</color>
+    <color name="kinetic_on_secondary_fixed">#004346</color>
+    <color name="kinetic_on_secondary_fixed_variant">#006266</color>
+    <color name="kinetic_on_secondary_container">#dffdff</color>
+    
+    <!-- Tertiary Colors - Pink/Magenta -->
+    <color name="kinetic_tertiary">#ff59e3</color>
+    <color name="kinetic_tertiary_container">#ff05e5</color>
+    <color name="kinetic_tertiary_fixed">#ff85e4</color>
+    <color name="kinetic_tertiary_fixed_dim">#ff68e3</color>
+    <color name="kinetic_tertiary_dim">#ff59e3</color>
+    <color name="kinetic_on_tertiary">#42003a</color>
+    <color name="kinetic_on_tertiary_fixed">#33002d</color>
+    <color name="kinetic_on_tertiary_fixed_variant">#6d0061</color>
+    <color name="kinetic_on_tertiary_container">#1b0017</color>
+    
+    <!-- Error Colors -->
+    <color name="kinetic_error">#ff716c</color>
+    <color name="kinetic_error_dim">#d7383b</color>
+    <color name="kinetic_error_container">#9f0519</color>
+    <color name="kinetic_on_error">#490006</color>
+    <color name="kinetic_on_error_container">#ffa8a3</color>
+    
+    <!-- Surface Colors - Dark Theme Base -->
+    <color name="kinetic_surface">#0a0e14</color>
+    <color name="kinetic_surface_dim">#0a0e14</color>
+    <color name="kinetic_surface_bright">#262c36</color>
+    <color name="kinetic_surface_container">#151a21</color>
+    <color name="kinetic_surface_container_low">#0f141a</color>
+    <color name="kinetic_surface_container_high">#1b2028</color>
+    <color name="kinetic_surface_container_highest">#20262f</color>
+    <color name="kinetic_surface_container_lowest">#000000</color>
+    <color name="kinetic_surface_tint">#9cff93</color>
+    <color name="kinetic_surface_variant">#20262f</color>
+    <color name="kinetic_on_surface">#f1f3fc</color>
+    <color name="kinetic_on_surface_variant">#a8abb3</color>
+    
+    <!-- Background Colors -->
+    <color name="kinetic_background">#0a0e14</color>
+    <color name="kinetic_on_background">#f1f3fc</color>
+    
+    <!-- Inverse Colors -->
+    <color name="kinetic_inverse_surface">#f8f9ff</color>
+    <color name="kinetic_inverse_on_surface">#51555c</color>
+    
+    <!-- Outline & Border Colors -->
+    <color name="kinetic_outline">#72757d</color>
+    <color name="kinetic_outline_variant">#44484f</color>
+    <color name="kinetic_scrim">#000000</color>
+    
+    <!-- ============================================================ -->
+    <!-- Legacy Compatibility Colors (Mapped to Kinetic) -->
+    <!-- ============================================================ -->
+    <color name="colorPrimary">@color/kinetic_primary</color>
+    <color name="colorPrimaryDark">@color/kinetic_surface_container_high</color>
+    <color name="colorAccent">@color/kinetic_secondary</color>
     <color name="sliding_up_panel_shadow_color">#99444444</color>
     <color name="bubble_bg">#eef2f3f9</color>
-    <color name="color_r">#FD999A</color>
-    <color name="color_j">#99CC99</color>
-    <color name="prefTextColorSecondary">#9DA0A2</color>
-    <color name="prefTextColorPrimary">#282C2F</color>
-    <color name="divider_functions_keyboard">#f0f0f0</color>
-    <color name="theme_color_black">#111214</color>
+    <color name="color_r">#ff716c</color>
+    <color name="color_j">#00f4fe</color>
+    <color name="prefTextColorSecondary">@color/kinetic_on_surface_variant</color>
+    <color name="prefTextColorPrimary">@color/kinetic_on_surface</color>
+    <color name="divider_functions_keyboard">@color/kinetic_outline_variant</color>
+    <color name="theme_color_black">@color/kinetic_surface</color>
 
-    <color name="background">#FFFFFF</color>
-    <color name="item_background">#FFFFFF</color>
-    <color name="item_background_dark">#FFFFFF</color>
-    <color name="text_color_secondary">#484C4F</color>
-    <color name="text_color_thirdly">#9DA0A2</color>
-    <color name="divider">#f2f3f5</color>
-    <color name="drawer_menu_item_text_color">#484C4F</color>
-    <color name="drawer_menu_group_text_color">#999999</color>
-    <color name="tab_indicator">@android:color/white</color>
-    <color name="tab_text">#a0ffffff</color>
-    <color name="toolbar">@android:color/white</color>
-    <color name="toolbar_disabled">#77e0e0e0</color>
-    <color name="console_debug">#cc000000</color>
-    <color name="console_verbose">#dfc0c0c0</color>
-    <color name="market_button_selected">#e14123</color>
-    <color name="market_button_unselected">#939393</color>
-    <color name="surface">#FFFFFFFF</color>
-    <color name="on_surface">#FF000000</color>
-    <color name="on_secondary">#FFFFFFFF</color>
-    <color name="on_background">#FF000000</color>
+    <color name="background">@color/kinetic_surface</color>
+    <color name="item_background">@color/kinetic_surface_container_low</color>
+    <color name="item_background_dark">@color/kinetic_surface_container_low</color>
+    <color name="text_color_secondary">@color/kinetic_on_surface</color>
+    <color name="text_color_thirdly">@color/kinetic_on_surface_variant</color>
+    <color name="divider">@color/kinetic_outline_variant</color>
+    <color name="drawer_menu_item_text_color">@color/kinetic_on_surface</color>
+    <color name="drawer_menu_group_text_color">@color/kinetic_on_surface_variant</color>
+    <color name="tab_indicator">@color/kinetic_primary</color>
+    <color name="tab_text">@color/kinetic_on_surface</color>
+    <color name="toolbar">@color/kinetic_on_surface</color>
+    <color name="toolbar_disabled">@color/kinetic_outline_variant</color>
+    <color name="console_debug">@color/kinetic_error</color>
+    <color name="console_verbose">@color/kinetic_secondary</color>
+    <color name="market_button_selected">@color/kinetic_primary</color>
+    <color name="market_button_unselected">@color/kinetic_on_surface_variant</color>
+    <color name="surface">@color/kinetic_surface</color>
+    <color name="on_surface">@color/kinetic_on_surface</color>
+    <color name="on_secondary">@color/kinetic_on_secondary</color>
+    <color name="on_background">@color/kinetic_on_background</color>
 </resources>

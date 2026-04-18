@@ -207,16 +207,10 @@ public class CodeEditText extends AppCompatEditText {
                 return;
             }
             lineEnd = Math.min(layout.getLineVisibleEnd(line), highlightTokens.colors.length);
-            //drawLineNumber
-            if (lineStart != lineEnd) {
-                lineNumber = text.toString().substring(0, lineEnd).split("\n").length;
-            } else {
-                lineNumber = text.toString().substring(0, lineEnd).split("\n").length + 1;
-            }
+            // drawLineNumber (stable and fast)
+            // Use layout line index instead of substring/split (which can cause duplicate numbers and "missing" lines).
+            lineNumber = line + 1;
             lineNumberText = Integer.toString(lineNumber);
-            if (lineNumberPrevious == lineNumber) {
-                lineNumberText = "";
-            }
 //            if (text.toString().length() <= lineEnd) {
 //                lineNumber += 1;
 //                lineNumberText = Integer.toString(lineNumber);

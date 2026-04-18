@@ -3,7 +3,7 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="?selectableItemBackground"
+              android:background="?attr/selectableItemBackgroundBorderless"
               android:orientation="vertical">
 
     <TextView
@@ -11,9 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="12dp"
-        android:textColor="@android:color/primary_text_light"
-        android:textSize="15sp"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="10dp"
+        android:textColor="#F1F3FC"
+        android:textSize="12sp"
         tools:text="OOXX"/>
 
 </LinearLayout>

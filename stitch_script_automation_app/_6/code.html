@@ -1,0 +1,249 @@
+<!DOCTYPE html><html class="dark" lang="zh-CN"><head></head><body class="bg-surface text-on-surface font-body min-h-screen pb-32 selection:bg-primary selection:text-on-primary">```html
+
+
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#00ec3b",
+                    "secondary-container": "#00696e",
+                    "on-primary-fixed": "#00440a",
+                    "on-secondary-container": "#dffdff",
+                    "error-dim": "#d7383b",
+                    "surface": "#0a0e14",
+                    "surface-container-highest": "#20262f",
+                    "primary": "#9cff93",
+                    "surface-dim": "#0a0e14",
+                    "inverse-primary": "#006f16",
+                    "tertiary": "#ff59e3",
+                    "on-secondary": "#00575b",
+                    "primary-dim": "#00ec3b",
+                    "secondary-dim": "#00e5ee",
+                    "outline-variant": "#44484f",
+                    "on-error-container": "#ffa8a3",
+                    "on-tertiary": "#42003a",
+                    "primary-container": "#00fc40",
+                    "secondary": "#00f4fe",
+                    "tertiary-dim": "#ff59e3",
+                    "surface-container-high": "#1b2028",
+                    "on-primary-fixed-variant": "#006513",
+                    "on-surface": "#f1f3fc",
+                    "on-error": "#490006",
+                    "on-tertiary-container": "#1b0017",
+                    "on-background": "#f1f3fc",
+                    "error-container": "#9f0519",
+                    "on-surface-variant": "#a8abb3",
+                    "on-primary": "#006413",
+                    "surface-variant": "#20262f",
+                    "tertiary-fixed": "#ff85e4",
+                    "on-tertiary-fixed": "#33002d",
+                    "outline": "#72757d",
+                    "on-secondary-fixed": "#004346",
+                    "background": "#0a0e14",
+                    "on-secondary-fixed-variant": "#006266",
+                    "secondary-fixed-dim": "#00e5ee",
+                    "surface-container-lowest": "#000000",
+                    "tertiary-fixed-dim": "#ff68e3",
+                    "on-tertiary-fixed-variant": "#6d0061",
+                    "error": "#ff716c",
+                    "primary-fixed": "#00fc40",
+                    "secondary-fixed": "#00f4fe",
+                    "inverse-on-surface": "#51555c",
+                    "tertiary-container": "#ff05e5",
+                    "inverse-surface": "#f8f9ff",
+                    "surface-container-low": "#0f141a",
+                    "surface-tint": "#9cff93",
+                    "surface-bright": "#262c36",
+                    "surface-container": "#151a21",
+                    "on-primary-container": "#005a10"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Space Grotesk"],
+                    "body": ["Inter"],
+                    "label": ["Space Grotesk"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .pulse-indicator {
+            box-shadow: 0 0 12px var(--primary);
+        }
+        .smoked-glass {
+            background: rgba(32, 38, 47, 0.7);
+            backdrop-filter: blur(12px);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#0a0e14] dark:bg-[#0a0e14]">
+<div class="flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#9cff93]" data-icon="terminal" style="">terminal</span>
+<h1 class="font-space-grotesk text-xl font-bold tracking-tighter text-[#9cff93]" style="">计划界面</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center hover:bg-[#151a21] transition-colors rounded-lg active:scale-95 duration-150" style="">
+<span class="material-symbols-outlined text-[#f1f3fc]/60" data-icon="settings" style="">settings</span>
+</button>
+</div>
+</header>
+<main class="pt-20 px-6 max-w-md mx-auto">
+<!-- Header Section -->
+<div class="mb-8 mt-4">
+<div class="flex justify-between items-end">
+<div>
+<p class="font-headline text-[10px] tracking-[0.2em] text-on-surface-variant uppercase mb-1" style="">系统编排</p>
+<h2 class="font-headline text-3xl font-bold text-on-surface" style="">计划任务</h2>
+</div>
+<div class="text-right">
+<span class="font-label text-[10px] text-primary/60 block" style="">运行时间</span>
+<span class="font-label text-sm text-primary" style="">99.98%</span>
+</div>
+</div>
+</div>
+<!-- Global Status Card -->
+<div class="bg-surface-container-low p-4 mb-8 rounded-lg relative overflow-hidden">
+<div class="absolute top-0 right-0 p-2">
+<div class="flex items-center gap-1.5 px-2 py-1 bg-surface-container-highest rounded text-[10px] font-label text-primary" style="">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+                    激活
+                </div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-on-surface-variant text-xs uppercase tracking-widest font-label" style="">下次执行</span>
+<span class="text-2xl font-headline font-medium" style="">08:00 <span class="text-on-surface-variant text-sm" style="">AM</span></span>
+<span class="text-[10px] text-on-surface-variant font-mono" style="">任务 ID: CRON_JOB_0814_ALPHA</span>
+</div>
+</div>
+<!-- Automation List -->
+<div class="space-y-6">
+<h3 class="font-headline text-xs tracking-widest text-on-surface-variant uppercase flex items-center gap-2" style="">
+                活跃例程 <span class="h-px flex-1 bg-outline-variant/15"></span>
+</h3>
+<!-- Task Card 1 -->
+<div class="group relative bg-surface-container hover:bg-surface-container-high transition-colors p-5 rounded-lg">
+<div class="absolute left-0 top-0 bottom-0 w-0.5 bg-primary"></div>
+<div class="flex justify-between items-start mb-4">
+<div class="flex flex-col">
+<span class="font-headline text-lg text-on-surface" style="">Data Sync_Primary</span>
+<div class="flex items-center gap-2 mt-1">
+<span class="material-symbols-outlined text-xs text-on-surface-variant" data-icon="event_repeat" style="">event_repeat</span>
+<span class="text-[10px] text-on-surface-variant font-medium tracking-tight" style="">每天 08:00 AM</span>
+</div>
+</div>
+<!-- Toggle Switch -->
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox">
+<div class="w-10 h-5 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-on-primary-fixed after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-on-surface-variant after:border-surface-container-highest after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-container peer-checked:after:bg-on-primary-fixed"></div>
+</div>
+</div>
+<div class="flex gap-2">
+<div class="px-2 py-0.5 bg-surface-container-highest rounded text-[10px] font-label text-secondary flex items-center gap-1" style="">
+<span class="material-symbols-outlined text-[12px]" data-icon="terminal" style="">terminal</span> SHELL
+                    </div>
+<div class="px-2 py-0.5 bg-surface-container-highest rounded text-[10px] font-label text-on-surface-variant" style="">AUTO_RETRY</div>
+</div>
+</div>
+<!-- Task Card 2 -->
+<div class="group relative bg-surface-container hover:bg-surface-container-high transition-colors p-5 rounded-lg">
+<div class="absolute left-0 top-0 bottom-0 w-0.5 bg-primary"></div>
+<div class="flex justify-between items-start mb-4">
+<div class="flex flex-col">
+<span class="font-headline text-lg text-on-surface" style="">Log Purge_Auto</span>
+<div class="flex items-center gap-2 mt-1">
+<span class="material-symbols-outlined text-xs text-on-surface-variant" data-icon="event_repeat" style="">event_repeat</span>
+<span class="text-[10px] text-on-surface-variant font-medium tracking-tight" style="">每周日 12:00 AM</span>
+</div>
+</div>
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox">
+<div class="w-10 h-5 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-on-primary-fixed after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-on-surface-variant after:border-surface-container-highest after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-container peer-checked:after:bg-on-primary-fixed"></div>
+</div>
+</div>
+<div class="flex gap-2">
+<div class="px-2 py-0.5 bg-surface-container-highest rounded text-[10px] font-label text-secondary flex items-center gap-1" style="">
+<span class="material-symbols-outlined text-[12px]" data-icon="receipt_long" style="">receipt_long</span> LOGS
+                    </div>
+</div>
+</div>
+<!-- Task Card 3 (Inactive) -->
+<div class="group relative bg-surface-container/50 hover:bg-surface-container-high/50 transition-colors p-5 rounded-lg opacity-60">
+<div class="flex justify-between items-start mb-4">
+<div class="flex flex-col">
+<span class="font-headline text-lg text-on-surface" style="">Weekly Report_Gen</span>
+<div class="flex items-center gap-2 mt-1">
+<span class="material-symbols-outlined text-xs text-on-surface-variant" data-icon="event_repeat" style="">event_repeat</span>
+<span class="text-[10px] text-on-surface-variant font-medium tracking-tight" style="">每周五 05:00 PM</span>
+</div>
+</div>
+<div class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox">
+<div class="w-10 h-5 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-on-primary-fixed after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-on-surface-variant after:border-surface-container-highest after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-container peer-checked:after:bg-on-primary-fixed"></div>
+</div>
+</div>
+<div class="flex gap-2">
+<div class="px-2 py-0.5 bg-surface-container-highest rounded text-[10px] font-label text-on-surface-variant" style="">已禁用</div>
+</div>
+</div>
+</div>
+<!-- Add Button Placeholder Spacer -->
+<div class="h-12"></div>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-28 right-6 w-14 h-14 bg-gradient-to-br from-primary to-primary-container rounded-lg shadow-[0_8px_32px_rgba(156,255,147,0.3)] flex items-center justify-center active:scale-90 transition-all z-50" style="">
+<span class="material-symbols-outlined text-on-primary-fixed text-3xl" data-icon="add" style="">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 pb-safe px-4 bg-[#0f141a]/90 backdrop-blur-md shadow-[0_-8px_24px_rgba(0,0,0,0.5)] border-t border-[#44484f]/15">
+<a class="flex flex-col items-center justify-center text-[#f1f3fc]/40 hover:text-[#00F5FF] transition-opacity active:opacity-80" href="#" style="">
+<span class="material-symbols-outlined" data-icon="folder_open" style="">folder_open</span>
+<span class="font-inter text-[10px] font-medium tracking-tight" style="">脚本库</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#f1f3fc]/40 hover:text-[#00F5FF] transition-opacity active:opacity-80" href="#" style="">
+<span class="material-symbols-outlined" data-icon="code" style="">code</span>
+<span class="font-inter text-[10px] font-medium tracking-tight" style="">编辑器</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#9cff93] transition-all duration-300 before:content-[''] before:w-1 before:h-1 before:bg-[#9cff93] before:rounded-full before:mb-1" href="#" style="">
+<span class="material-symbols-outlined" data-icon="event_repeat" style="font-variation-settings: &quot;FILL&quot; 1;">event_repeat</span>
+<span class="font-inter text-[10px] font-medium tracking-tight" style="">计划</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#f1f3fc]/40 hover:text-[#00F5FF] transition-opacity active:opacity-80" href="#" style="">
+<span class="material-symbols-outlined" data-icon="receipt_long" style="">receipt_long</span>
+<span class="font-inter text-[10px] font-medium tracking-tight" style="">日志</span>
+</a>
+</nav>
+<!-- Micro-metadata Overlay -->
+<div class="fixed top-20 right-6 opacity-20 pointer-events-none select-none hidden sm:block">
+<div class="text-[8px] font-mono leading-tight text-right" style="">
+            SEC_CHANNEL_01: STABLE<br>
+            LATENCY: 14MS<br>
+            ENCRYPTION: AES-256<br>
+            SYNC: OK
+        </div>
+</div>
+```</body></html>

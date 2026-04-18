@@ -1,0 +1,222 @@
+<!DOCTYPE html><html class="dark" lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#00ec3b",
+                    "secondary-container": "#00696e",
+                    "on-primary-fixed": "#00440a",
+                    "on-secondary-container": "#dffdff",
+                    "error-dim": "#d7383b",
+                    "surface": "#0a0e14",
+                    "surface-container-highest": "#20262f",
+                    "primary": "#9cff93",
+                    "surface-dim": "#0a0e14",
+                    "inverse-primary": "#006f16",
+                    "tertiary": "#ff59e3",
+                    "on-secondary": "#00575b",
+                    "primary-dim": "#00ec3b",
+                    "secondary-dim": "#00e5ee",
+                    "outline-variant": "#44484f",
+                    "on-error-container": "#ffa8a3",
+                    "on-tertiary": "#42003a",
+                    "primary-container": "#00fc40",
+                    "secondary": "#00f4fe",
+                    "tertiary-dim": "#ff59e3",
+                    "surface-container-high": "#1b2028",
+                    "on-primary-fixed-variant": "#006513",
+                    "on-surface": "#f1f3fc",
+                    "on-error": "#490006",
+                    "on-tertiary-container": "#1b0017",
+                    "on-background": "#f1f3fc",
+                    "error-container": "#9f0519",
+                    "on-surface-variant": "#a8abb3",
+                    "on-primary": "#006413",
+                    "surface-variant": "#20262f",
+                    "tertiary-fixed": "#ff85e4",
+                    "on-tertiary-fixed": "#33002d",
+                    "outline": "#72757d",
+                    "on-secondary-fixed": "#004346",
+                    "background": "#0a0e14",
+                    "on-secondary-fixed-variant": "#006266",
+                    "secondary-fixed-dim": "#00e5ee",
+                    "surface-container-lowest": "#000000",
+                    "tertiary-fixed-dim": "#ff68e3",
+                    "on-tertiary-fixed-variant": "#6d0061",
+                    "error": "#ff716c",
+                    "primary-fixed": "#00fc40",
+                    "secondary-fixed": "#00f4fe",
+                    "inverse-on-surface": "#51555c",
+                    "tertiary-container": "#ff05e5",
+                    "inverse-surface": "#f8f9ff",
+                    "surface-container-low": "#0f141a",
+                    "surface-tint": "#9cff93",
+                    "surface-bright": "#262c36",
+                    "surface-container": "#151a21",
+                    "on-primary-container": "#005a10"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Space Grotesk"],
+                    "body": ["Inter", "PingFang SC", "Microsoft YaHei"],
+                    "label": ["Space Grotesk"],
+                    "mono": ["JetBrains Mono"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .code-shadow {
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.4);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#0a0e14] flex justify-between items-center px-6 h-16">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#9cff93]" style="">terminal</span>
+<h1 class="font-headline text-xl font-bold tracking-tighter text-[#9cff93]" style="">编辑器</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-2 bg-surface-container-high px-3 py-1.5 rounded-lg border border-outline-variant/10 text-on-surface-variant hover:bg-[#151a21] transition-colors active:scale-95 duration-150" style="">
+<span class="material-symbols-outlined text-sm" style="">save</span>
+<span class="font-label text-xs uppercase tracking-wider font-bold" style="">保存</span>
+</button>
+<button class="flex items-center gap-2 bg-gradient-to-br from-primary to-primary-container px-4 py-1.5 rounded-lg text-on-primary-fixed shadow-lg shadow-primary/10 active:scale-95 transition-all" style="">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: &quot;FILL&quot; 1;">play_arrow</span>
+<span class="font-label text-xs uppercase tracking-wider font-bold" style="">运行</span>
+</button>
+</div>
+</header>
+<!-- Main Workspace -->
+<main class="pt-16 pb-20 min-h-screen flex flex-col bg-surface">
+<!-- File Info Bar -->
+<div class="h-10 bg-surface-container-low flex items-center px-6 border-b border-outline-variant/5">
+<div class="flex items-center gap-2 bg-surface-container px-3 h-full border-r border-outline-variant/10">
+<span class="material-symbols-outlined text-secondary text-sm" style="">javascript</span>
+<span class="font-mono text-xs text-on-surface" style="">index.js</span>
+<span class="material-symbols-outlined text-xs text-outline cursor-pointer" style="">close</span>
+</div>
+<div class="ml-auto flex items-center gap-4 text-[10px] font-mono text-outline uppercase tracking-widest">
+<span class="" style="">UTF-8</span>
+<span class="text-primary-dim" style="">Javascript</span>
+</div>
+</div>
+<!-- Editor Canvas -->
+<div class="flex-1 relative font-mono text-sm leading-relaxed overflow-hidden flex">
+<!-- Line Numbers -->
+<div class="w-12 bg-surface-container-low/50 py-4 flex flex-col items-center text-outline-variant/60 select-none border-r border-outline-variant/5">
+<span class="" style="">1</span>
+<span class="" style="">2</span>
+<span class="text-primary/40 bg-primary/5 w-full text-center" style="">3</span>
+<span class="" style="">4</span>
+<span class="" style="">5</span>
+<span class="" style="">6</span>
+<span class="" style="">7</span>
+<span class="" style="">8</span>
+<span class="" style="">9</span>
+<span class="" style="">10</span>
+<span class="" style="">11</span>
+<span class="" style="">12</span>
+<span class="" style="">13</span>
+<span class="" style="">14</span>
+<span class="" style="">15</span>
+</div>
+<!-- Code Content -->
+<div class="flex-1 p-4 bg-surface-container-lowest/30 code-shadow overflow-x-auto">
+<div class="whitespace-pre" style=""><span class="text-tertiary" style="">import</span> { Kinetic } <span class="text-tertiary" style="">from</span> <span class="text-secondary" style="">'@kinetic/core'</span>;
+
+<span class="text-outline-variant italic" style="">// 初始化自动化引擎</span>
+<span class="text-tertiary" style="">const</span> <span class="text-primary-fixed-dim" style="">engine</span> = <span class="text-tertiary" style="">new</span> <span class="text-secondary-fixed" style="">Kinetic</span>({
+    id: <span class="text-secondary" style="">'KNT-909'</span>,
+    verbose: <span class="text-primary-fixed-dim" style="">true</span>,
+    mode: <span class="text-secondary" style="">'terminal-luxe'</span>
+});
+
+<span class="text-tertiary" style="">async function</span> <span class="text-secondary-fixed" style="">executeWorkflow</span>() {
+    <span class="text-tertiary" style="">try</span> {
+        <span class="text-tertiary" style="">await</span> <span class="text-primary-fixed-dim" style="">engine</span>.<span class="text-secondary-fixed" style="">start</span>();
+        <span class="text-primary-fixed-dim" style="">console</span>.<span class="text-secondary-fixed" style="">log</span>(<span class="text-secondary" style="">'系统已激活...'</span>);<span class="relative">
+<span class="absolute left-[-4px] top-0 bottom-0 w-[2px] bg-primary shadow-[0_0_8px_#9cff93]"></span></span>
+    } <span class="text-tertiary" style="">catch</span> (err) {
+        <span class="text-tertiary-fixed" style="">throw</span> <span class="text-tertiary" style="">new</span> <span class="text-secondary-fixed" style="">Error</span>(<span class="text-secondary" style="">'严重故障'</span>);
+    }
+}</div>
+</div>
+</div>
+<!-- Programming Toolbar (Sticky above Bottom Nav) -->
+<div class="sticky bottom-20 w-full bg-surface-container-high/80 backdrop-blur-xl border-t border-outline-variant/10 px-4 py-2 flex items-center justify-between gap-2 overflow-x-auto no-scrollbar z-40">
+<div class="flex items-center gap-1.5">
+<button class="h-10 w-10 flex items-center justify-center bg-surface-container-low border border-outline-variant/20 rounded font-mono text-primary-dim hover:bg-surface transition-colors active:scale-95" style="">{</button>
+<button class="h-10 w-10 flex items-center justify-center bg-surface-container-low border border-outline-variant/20 rounded font-mono text-primary-dim hover:bg-surface transition-colors active:scale-95" style="">}</button>
+<button class="h-10 w-10 flex items-center justify-center bg-surface-container-low border border-outline-variant/20 rounded font-mono text-primary-dim hover:bg-surface transition-colors active:scale-95" style="">(</button>
+<button class="h-10 w-10 flex items-center justify-center bg-surface-container-low border border-outline-variant/20 rounded font-mono text-primary-dim hover:bg-surface transition-colors active:scale-95" style="">)</button>
+<button class="h-10 w-10 flex items-center justify-center bg-surface-container-low border border-outline-variant/20 rounded font-mono text-primary-dim hover:bg-surface transition-colors active:scale-95" style="">[</button>
+<button class="h-10 w-10 flex items-center justify-center bg-surface-container-low border border-outline-variant/20 rounded font-mono text-primary-dim hover:bg-surface transition-colors active:scale-95" style="">]</button>
+<button class="h-10 w-10 flex items-center justify-center bg-surface-container-low border border-outline-variant/20 rounded font-mono text-primary-dim hover:bg-surface transition-colors active:scale-95" style="">;</button>
+<button class="h-10 w-10 flex items-center justify-center bg-surface-container-low border border-outline-variant/20 rounded font-mono text-primary-dim hover:bg-surface transition-colors active:scale-95" style="">=</button>
+<button class="h-10 w-10 flex items-center justify-center bg-surface-container-low border border-outline-variant/20 rounded font-mono text-secondary hover:bg-surface transition-colors active:scale-95" style="">"</button>
+</div>
+<div class="flex-shrink-0 ml-4 pl-4 border-l border-outline-variant/20">
+<button class="h-10 px-4 flex items-center justify-center bg-surface-container-lowest border border-primary/20 rounded font-mono text-primary-dim text-xs uppercase tracking-tighter active:scale-95" style="">缩进</button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 pb-safe px-4 bg-[#0f141a]/90 backdrop-blur-md shadow-[0_-8px_24px_rgba(0,0,0,0.5)] border-t border-[#44484f]/15">
+<a class="flex flex-col items-center justify-center text-[#f1f3fc]/40 hover:text-[#00F5FF] transition-opacity active:opacity-80" href="#" style="">
+<span class="material-symbols-outlined" style="">folder_open</span>
+<span class="font-body text-[10px] font-medium tracking-tight" style="">脚本库</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#9cff93] transition-all duration-300 before:content-[''] before:w-1 before:h-1 before:bg-[#9cff93] before:rounded-full before:mb-1 hover:text-[#00F5FF] active:opacity-80" href="#" style="">
+<span class="material-symbols-outlined" style="">code</span>
+<span class="font-body text-[10px] font-medium tracking-tight" style="">编辑器</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#f1f3fc]/40 hover:text-[#00F5FF] transition-opacity active:opacity-80" href="#" style="">
+<span class="material-symbols-outlined" style="">event_repeat</span>
+<span class="font-body text-[10px] font-medium tracking-tight" style="">计划</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#f1f3fc]/40 hover:text-[#00F5FF] transition-opacity active:opacity-80" href="#" style="">
+<span class="material-symbols-outlined" style="">receipt_long</span>
+<span class="font-body text-[10px] font-medium tracking-tight" style="">日志</span>
+</a>
+</nav>
+<!-- System Vitality Pulse (Decorative) -->
+<div class="fixed bottom-24 right-6 flex flex-col items-end gap-2 pointer-events-none opacity-60">
+<div class="flex items-center gap-2 bg-surface-container-high px-2 py-1 rounded text-[8px] font-mono text-outline" style="">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+            CPU: 12.4%
+        </div>
+<div class="flex items-center gap-2 bg-surface-container-high px-2 py-1 rounded text-[8px] font-mono text-outline" style="">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse" style="animation-delay: 1s"></span>
+            内存: 412MB
+        </div>
+</div>
+</body></html>

@@ -61,7 +61,17 @@ abstract class AutoJs protected constructor(protected val application: Applicati
     init {
         ObjectWatcher.init(application)
         ScreenMetrics.initIfNeeded(application)
-        MlKit.initialize(application)
+        try {
+            MlKit.initialize(application)
+        } catch (t: Throwable) {
+            // MlKit may have been initialized by main process already.
+            // Ignore "already initialized" to allow AutoJs to be created in other processes.
+            val msg = t.message?.lowercase().orEmpty()
+            val causeMsg = t.cause?.message?.lowercase().orEmpty()
+            if (!msg.contains("already initialized") && !causeMsg.contains("already initialized")) {
+                throw t
+            }
+        }
         ShizukuClient.instance.setupService(application.packageName, globalConsole)
         scriptEngineService = buildScriptEngineService()
         ScriptEngineService.instance = scriptEngineService

@@ -26,6 +26,8 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.functions.Consumer
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.TimeoutCancellationException
 import org.opencv.core.Point
 import org.opencv.core.Rect
 import org.opencv.imgproc.Imgproc
@@ -44,6 +46,10 @@ class Images(
     private val mScriptRuntime: ScriptRuntime,
     private val mScreenCaptureRequester: ScreenCaptureRequester
 ) {
+    companion object {
+        private const val SCREEN_CAPTURE_PERMISSION_TIMEOUT_MS = 30000L
+    }
+
     private val mScreenMetrics: ScreenMetrics = mScriptRuntime.screenMetrics
     private val disposables = mutableListOf<Disposable>()
 
@@ -52,11 +58,21 @@ class Images(
 
     fun requestScreenCapture(orientation: Int): Boolean = runBlocking {
         try {
-            mScreenCaptureRequester.requestScreenCapture(
-                mContext, orientation
-            )
-            captureScreen()
+            // Reuse existing capturer when permission has already been granted.
+            // Re-requesting every run can cause transient activity/token issues in remote runs.
+            mScreenCaptureRequester.screenCapture?.let {
+                return@runBlocking true
+            }
+            withTimeout(SCREEN_CAPTURE_PERMISSION_TIMEOUT_MS) {
+                mScreenCaptureRequester.requestScreenCapture(
+                    mContext, orientation
+                )
+            }
             true
+        } catch (e: TimeoutCancellationException) {
+            mScriptRuntime.toast("请求截图权限超时")
+            Log.e(Images::class.java.name, "请求截图权限超时", e)
+            false
         } catch (e: Exception) {
             mScriptRuntime.toast(e.message)
             Log.e(Images::class.java.name, "请求截图权限失败", e)

@@ -78,13 +78,24 @@ abstract class LayoutInspectTileService : TileService(), CaptureAvailableListene
             delay(500)
             dialog.dismiss()
             if (AccessibilityService.instance == null) {
-                toast(
-                    this@LayoutInspectTileService,
-                    R.string.text_no_accessibility_permission_to_capture
-                )
-                AccessibilityServiceTool.goToAccessibilitySetting()
-                inactive()
-                return@launch
+                if (!AccessibilityServiceTool.isAccessibilityServiceEnabled(this@LayoutInspectTileService)) {
+                    toast(
+                        this@LayoutInspectTileService,
+                        R.string.text_no_accessibility_permission_to_capture
+                    )
+                    AccessibilityServiceTool.goToAccessibilitySetting()
+                    inactive()
+                    return@launch
+                }
+                AccessibilityService.waitForEnabled(2500)
+                if (AccessibilityService.instance == null) {
+                    toast(
+                        this@LayoutInspectTileService,
+                        R.string.text_accessibility_bound_retry_after_wait
+                    )
+                    inactive()
+                    return@launch
+                }
             }
             mCapturing = true
             delay(200)

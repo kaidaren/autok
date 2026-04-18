@@ -1,0 +1,259 @@
+<!DOCTYPE html><html class="dark" lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary": "#10B981",
+                    "primary-glow": "rgba(16, 185, 129, 0.4)",
+                    "surface": "#0a0c10",
+                    "surface-card": "#121820",
+                    "on-surface": "#f1f3fc",
+                    "on-surface-variant": "#94a3b8",
+                    "secondary": "#00f4fe",
+                    "outline-variant": "rgba(255, 255, 255, 0.05)",
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.5rem",
+                    "lg": "0.75rem",
+                    "xl": "1rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Space Grotesk", "sans-serif"],
+                    "body": ["Inter", "sans-serif"],
+                    "label": ["Space Grotesk", "sans-serif"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .pulse-indicator {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.1); }
+        }
+        .glow-text {
+            text-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+        }
+        .glow-button {
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+        }
+        .card-inner-glow {
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+        .deep-gradient {
+            background: radial-gradient(circle at top center, #161e29 0%, #0a0c10 100%);
+        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #0a0e14; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 2px; }
+    </style>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="deep-gradient text-on-surface font-body selection:bg-primary/30 min-h-screen">
+<!-- 顶部导航栏 -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-white/[0.03] flex justify-between items-center px-6 h-16">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary glow-text" data-icon="terminal" style="">terminal</span>
+<h1 class="font-headline text-xl font-bold tracking-tighter text-primary glow-text" style="">文件界面</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-white/5 transition-colors active:scale-95 duration-150 border border-white/5" style="">
+<span class="material-symbols-outlined text-on-surface-variant/60" data-icon="settings" style="">settings</span>
+</button>
+</header>
+<main class="pt-24 pb-28 px-5 max-w-2xl mx-auto">
+<!-- 仪表盘统计 -->
+<div class="grid grid-cols-6 gap-4 mb-10">
+<div class="col-span-4 bg-surface-card p-5 rounded-xl card-inner-glow border border-white/5 flex flex-col justify-between min-h-[130px]">
+<span class="font-label text-[11px] uppercase tracking-[0.15em] text-on-surface-variant" style="">当前活跃实例</span>
+<div class="flex items-baseline gap-3">
+<span class="text-5xl font-headline font-bold text-primary glow-text" style="">12</span>
+<span class="text-xs text-primary/70 font-mono font-medium" style="">运行中</span>
+</div>
+</div>
+<div class="col-span-2 bg-surface-card p-5 rounded-xl card-inner-glow border border-white/5 flex flex-col items-center justify-center">
+<div class="p-2 rounded-full bg-secondary/10 mb-2">
+<span class="material-symbols-outlined text-secondary text-2xl leading-none" data-icon="bolt" style="">bolt</span>
+</div>
+<span class="text-[10px] font-label uppercase tracking-widest text-on-surface-variant mb-1" style="">负载</span>
+<span class="text-xl font-headline font-bold text-secondary" style="">24%</span>
+</div>
+</div>
+<!-- 列表标题 -->
+<div class="flex justify-between items-end mb-8 px-1">
+<div>
+<h2 class="font-headline text-2xl font-bold tracking-tight text-on-surface" style="">脚本库</h2>
+<p class="text-[10px] text-on-surface-variant font-mono mt-1 opacity-60" style="">根目录/脚本/第一卷</p>
+</div>
+<button class="bg-primary hover:brightness-110 text-black px-5 py-2.5 rounded-lg font-label text-xs font-bold flex items-center gap-2 transition-all active:scale-95 glow-button" style="">
+<span class="material-symbols-outlined text-sm" data-icon="add" style="">add</span>
+            新建脚本
+        </button>
+</div>
+<!-- 脚本列表 -->
+<div class="space-y-6">
+<!-- 脚本项 1: 活跃 -->
+<div class="relative bg-surface-card rounded-xl overflow-hidden transition-all hover:translate-y-[-2px] border border-white/5 card-inner-glow">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary shadow-[2px_0_10px_rgba(16,185,129,0.3)]"></div>
+<div class="p-5 pl-7">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="pulse-indicator w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
+<h3 class="font-headline font-semibold text-on-surface tracking-wide" style="">数据库集群_Alpha</h3>
+</div>
+<span class="text-[10px] font-mono text-on-surface-variant bg-white/5 px-2.5 py-1 rounded-md border border-white/5" style="">版本 2.4.1</span>
+</div>
+<div class="flex gap-8 mb-6">
+<div class="flex flex-col">
+<span class="text-[10px] uppercase tracking-wider text-on-surface-variant font-label mb-1" style="">上次执行</span>
+<span class="text-xs font-mono text-on-surface/90" style="">2023-10-24 14:02:11</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] uppercase tracking-wider text-on-surface-variant font-label mb-1" style="">成功率</span>
+<span class="text-xs font-mono text-primary font-bold" style="">99.8%</span>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="flex-1 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 py-2.5 rounded-lg font-label text-xs font-bold flex items-center justify-center gap-2 transition-all" style="">
+<span class="material-symbols-outlined text-sm" data-icon="play_arrow" data-weight="fill" style="">play_arrow</span>
+                        运行同步
+                    </button>
+<button class="w-12 bg-white/5 hover:bg-white/10 text-on-surface-variant py-2.5 rounded-lg flex items-center justify-center transition-colors border border-white/5" style="">
+<span class="material-symbols-outlined text-sm" data-icon="edit" style="">edit</span>
+</button>
+<button class="w-12 bg-white/5 hover:bg-white/10 text-on-surface-variant py-2.5 rounded-lg flex items-center justify-center transition-colors border border-white/5" style="">
+<span class="material-symbols-outlined text-sm" data-icon="more_vert" style="">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- 脚本项 2: 运行中 -->
+<div class="relative bg-surface-card rounded-xl overflow-hidden transition-all border border-white/5 card-inner-glow">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-secondary shadow-[2px_0_10px_rgba(0,244,254,0.3)]"></div>
+<div class="p-5 pl-7">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="pulse-indicator w-2.5 h-2.5 rounded-full bg-secondary shadow-[0_0_10px_rgba(0,244,254,0.8)]"></div>
+<h3 class="font-headline font-semibold text-on-surface tracking-wide" style="">自动伸缩路由器</h3>
+</div>
+<span class="text-[10px] font-mono text-secondary bg-secondary/10 px-2.5 py-1 rounded-md border border-secondary/20" style="">正在运行</span>
+</div>
+<div class="w-full bg-black/40 h-1.5 rounded-full mb-6 overflow-hidden border border-white/5">
+<div class="h-full bg-secondary w-2/3 shadow-[0_0_8px_rgba(0,244,254,0.5)]"></div>
+</div>
+<div class="flex gap-3">
+<button class="flex-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 py-2.5 rounded-lg font-label text-xs font-bold flex items-center justify-center gap-2 transition-all" style="">
+<span class="material-symbols-outlined text-sm" data-icon="stop" data-weight="fill" style="">stop</span>
+                        中止进程
+                    </button>
+<button class="w-12 bg-white/5 text-on-surface-variant py-2.5 rounded-lg flex items-center justify-center border border-white/5" style="">
+<span class="material-symbols-outlined text-sm" data-icon="monitoring" style="">monitoring</span>
+</button>
+</div>
+</div>
+</div>
+<!-- 脚本项 3: 已完成 -->
+<div class="relative bg-surface-card rounded-xl overflow-hidden transition-all hover:translate-y-[-2px] border border-white/5 card-inner-glow">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary/40"></div>
+<div class="p-5 pl-7">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="w-2.5 h-2.5 rounded-full bg-primary/30"></div>
+<h3 class="font-headline font-semibold text-on-surface tracking-wide" style="">S3存储桶优化器</h3>
+</div>
+<span class="text-[10px] font-mono text-on-surface-variant bg-white/5 px-2.5 py-1 rounded-md border border-white/5" style="">版本 3.1.2</span>
+</div>
+<div class="flex gap-8 mb-6">
+<div class="flex flex-col">
+<span class="text-[10px] uppercase tracking-wider text-on-surface-variant font-label mb-1" style="">上次执行</span>
+<span class="text-xs font-mono text-on-surface/90" style="">刚刚</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] uppercase tracking-wider text-on-surface-variant font-label mb-1" style="">执行状态</span>
+<span class="text-xs font-mono text-primary/80" style="">完成_0X00</span>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="flex-1 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 py-2.5 rounded-lg font-label text-xs font-bold flex items-center justify-center gap-2 transition-all" style="">
+<span class="material-symbols-outlined text-sm" data-icon="play_arrow" data-weight="fill" style="">play_arrow</span>
+                        再次运行
+                    </button>
+<button class="w-12 bg-white/5 hover:bg-white/10 text-on-surface-variant py-2.5 rounded-lg flex items-center justify-center transition-colors border border-white/5" style="">
+<span class="material-symbols-outlined text-sm" data-icon="edit" style="">edit</span>
+</button>
+</div>
+</div>
+</div>
+<!-- 脚本项 4: 归档 -->
+<div class="relative bg-surface-card/40 rounded-xl overflow-hidden border border-white/[0.02]">
+<div class="p-5 pl-7">
+<div class="flex justify-between items-start mb-4 opacity-40">
+<div class="flex items-center gap-3">
+<div class="w-2.5 h-2.5 rounded-full bg-on-surface-variant"></div>
+<h3 class="font-headline font-semibold text-on-surface tracking-wide" style="">旧版日志清理</h3>
+</div>
+<span class="text-[10px] font-mono text-on-surface-variant bg-white/5 px-2.5 py-1 rounded-md" style="">版本 1.0.0</span>
+</div>
+<div class="flex gap-8 mb-6 opacity-40">
+<div class="flex flex-col">
+<span class="text-[10px] uppercase tracking-wider text-on-surface-variant font-label mb-1" style="">停止时间</span>
+<span class="text-xs font-mono text-on-surface" style="">2023-09-12 04:15:00</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] uppercase tracking-wider text-on-surface-variant font-label mb-1" style="">状态</span>
+<span class="text-xs font-mono text-on-surface-variant italic" style="">已归档</span>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="flex-1 bg-white/5 hover:bg-white/10 text-secondary/60 py-2.5 rounded-lg font-label text-xs font-bold flex items-center justify-center gap-2 transition-all border border-white/5" style="">
+<span class="material-symbols-outlined text-sm" data-icon="refresh" style="">refresh</span>
+                        还原脚本
+                    </button>
+<button class="w-12 bg-white/5 hover:bg-white/10 text-on-surface-variant/50 py-2.5 rounded-lg flex items-center justify-center transition-colors border border-white/5" style="">
+<span class="material-symbols-outlined text-sm" data-icon="edit" style="">edit</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- 底部导航栏 -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 pb-safe px-4 bg-surface/90 backdrop-blur-2xl shadow-[0_-10px_30px_rgba(0,0,0,0.5)] border-t border-white/[0.05]">
+<a class="flex flex-col items-center justify-center text-primary transition-all duration-300 relative group" href="#" style="">
+<div class="absolute -top-1 w-1 h-1 bg-primary rounded-full shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div>
+<span class="material-symbols-outlined glow-text" data-icon="folder_open" data-weight="fill" style="">folder_open</span>
+<span class="font-inter text-[10px] font-bold tracking-tight mt-1" style="">脚本库</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/40 hover:text-primary transition-colors" href="#" style="">
+<span class="material-symbols-outlined" data-icon="code" style="">code</span>
+<span class="font-inter text-[10px] font-medium tracking-tight mt-1" style="">编辑器</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/40 hover:text-primary transition-colors" href="#" style="">
+<span class="material-symbols-outlined" data-icon="event_repeat" style="">event_repeat</span>
+<span class="font-inter text-[10px] font-medium tracking-tight mt-1" style="">计划</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/40 hover:text-primary transition-colors" href="#" style="">
+<span class="material-symbols-outlined" data-icon="receipt_long" style="">receipt_long</span>
+<span class="font-inter text-[10px] font-medium tracking-tight mt-1" style="">日志</span>
+</a>
+</nav>
+<!-- 底部背景装饰光晕 -->
+<div class="fixed -bottom-24 left-1/2 -translate-x-1/2 w-80 h-80 bg-primary/10 blur-[120px] pointer-events-none rounded-full"></div>
+</body></html>

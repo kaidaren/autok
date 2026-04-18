@@ -1,0 +1,256 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Kinetic Console - Logs</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#00ec3b",
+                    "secondary-container": "#00696e",
+                    "on-primary-fixed": "#00440a",
+                    "on-secondary-container": "#dffdff",
+                    "error-dim": "#d7383b",
+                    "surface": "#0a0e14",
+                    "surface-container-highest": "#20262f",
+                    "primary": "#9cff93",
+                    "surface-dim": "#0a0e14",
+                    "inverse-primary": "#006f16",
+                    "tertiary": "#ff59e3",
+                    "on-secondary": "#00575b",
+                    "primary-dim": "#00ec3b",
+                    "secondary-dim": "#00e5ee",
+                    "outline-variant": "#44484f",
+                    "on-error-container": "#ffa8a3",
+                    "on-tertiary": "#42003a",
+                    "primary-container": "#00fc40",
+                    "secondary": "#00f4fe",
+                    "tertiary-dim": "#ff59e3",
+                    "surface-container-high": "#1b2028",
+                    "on-primary-fixed-variant": "#006513",
+                    "on-surface": "#f1f3fc",
+                    "on-error": "#490006",
+                    "on-tertiary-container": "#1b0017",
+                    "on-background": "#f1f3fc",
+                    "error-container": "#9f0519",
+                    "on-surface-variant": "#a8abb3",
+                    "on-primary": "#006413",
+                    "surface-variant": "#20262f",
+                    "tertiary-fixed": "#ff85e4",
+                    "on-tertiary-fixed": "#33002d",
+                    "outline": "#72757d",
+                    "on-secondary-fixed": "#004346",
+                    "background": "#0a0e14",
+                    "on-secondary-fixed-variant": "#006266",
+                    "secondary-fixed-dim": "#00e5ee",
+                    "surface-container-lowest": "#000000",
+                    "tertiary-fixed-dim": "#ff68e3",
+                    "on-tertiary-fixed-variant": "#6d0061",
+                    "error": "#ff716c",
+                    "primary-fixed": "#00fc40",
+                    "secondary-fixed": "#00f4fe",
+                    "inverse-on-surface": "#51555c",
+                    "tertiary-container": "#ff05e5",
+                    "inverse-surface": "#f8f9ff",
+                    "surface-container-low": "#0f141a",
+                    "surface-tint": "#9cff93",
+                    "surface-bright": "#262c36",
+                    "surface-container": "#151a21",
+                    "on-primary-container": "#005a10"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Space Grotesk"],
+                    "body": ["Inter"],
+                    "label": ["Space Grotesk"],
+                    "mono": ["JetBrains Mono"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .log-line {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .matrix-glow {
+            text-shadow: 0 0 8px rgba(156, 255, 147, 0.4);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface font-body overflow-x-hidden selection:bg-primary selection:text-on-primary">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#0a0e14] flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[#9cff93]" data-icon="terminal" style="">terminal</span>
+<h1 class="font-space-grotesk text-xl font-bold tracking-tighter text-[#9cff93]" style="">日志界面</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-[#f1f3fc]/60 hover:bg-[#151a21] transition-colors p-2 rounded-lg active:scale-95 duration-150" style="">
+<span class="material-symbols-outlined" data-icon="settings" style="">settings</span>
+</button>
+</div>
+</header>
+<!-- Main Content Stage -->
+<main class="pt-20 pb-24 px-4 min-h-screen flex flex-col gap-4">
+<!-- Action Header -->
+<section class="flex items-center justify-between px-2">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_8px_#9cff93]"></div>
+<span class="font-headline text-xs font-bold tracking-widest uppercase text-on-surface-variant" style="">实时日志</span>
+</div>
+<div class="flex gap-2">
+<button class="bg-surface-container hover:bg-surface-container-high text-on-surface flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all active:scale-95 border border-outline-variant/15" style="">
+<span class="material-symbols-outlined text-sm" data-icon="content_copy" style="">content_copy</span>
+<span class="font-headline text-[10px] font-bold tracking-wider uppercase" style="">复制</span>
+</button>
+<button class="bg-surface-container hover:bg-surface-container-high text-tertiary flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all active:scale-95 border border-outline-variant/15" style="">
+<span class="material-symbols-outlined text-sm" data-icon="delete_sweep" style="">delete_sweep</span>
+<span class="font-headline text-[10px] font-bold tracking-wider uppercase" style="">清除</span>
+</button>
+</div>
+</section>
+<!-- Console Viewport -->
+<div class="flex-1 bg-surface-container-lowest rounded-xl border border-outline-variant/15 overflow-hidden flex flex-col">
+<!-- Header Metadata -->
+<div class="bg-surface-container-low px-4 py-2 border-b border-outline-variant/10 flex justify-between items-center">
+<span class="font-mono text-[10px] text-outline uppercase tracking-widest" style="">警告</span>
+<span class="font-mono text-[10px] text-primary/50 tracking-tighter" style="">0.0.0.0:8080</span>
+</div>
+<!-- Terminal Stream -->
+<div class="flex-1 overflow-y-auto p-4 space-y-3">
+<!-- Log Entry: INFO -->
+<div class="flex flex-col gap-1 border-l-2 border-primary/40 pl-3">
+<div class="flex items-center gap-2">
+<span class="font-mono text-[10px] text-outline" style="">警告</span>
+<span class="bg-primary/10 text-primary text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-tighter border border-primary/20" style="">信息</span>
+</div>
+<p class="log-line text-xs text-on-surface leading-relaxed" style="">系统初始化程序已启动。正在加载动力模块...</p>
+</div>
+<!-- Log Entry: INFO -->
+<div class="flex flex-col gap-1 border-l-2 border-primary/40 pl-3">
+<div class="flex items-center gap-2">
+<span class="font-mono text-[10px] text-outline" style="">警告</span>
+<span class="bg-primary/10 text-primary text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-tighter border border-primary/20" style="">信息</span>
+</div>
+<p class="log-line text-xs text-on-surface leading-relaxed" style="">神经桥接握手成功。延迟：14ms。</p>
+</div>
+<!-- Log Entry: WARN -->
+<div class="flex flex-col gap-1 border-l-2 border-secondary/40 pl-3">
+<div class="flex items-center gap-2">
+<span class="font-mono text-[10px] text-outline" style="">运行时间</span>
+<span class="bg-secondary/10 text-secondary text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-tighter border border-secondary/20" style="">警告</span>
+</div>
+<p class="log-line text-xs text-on-surface leading-relaxed" style="">缓冲区饱和度接近 85%。正在限制摄取...</p>
+</div>
+<!-- Log Entry: INFO -->
+<div class="flex flex-col gap-1 border-l-2 border-primary/40 pl-3">
+<div class="flex items-center gap-2">
+<span class="font-mono text-[10px] text-outline" style="">警告</span>
+<span class="bg-primary/10 text-primary text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-tighter border border-primary/20" style="">信息</span>
+</div>
+<p class="log-line text-xs text-on-surface leading-relaxed" style="">正在执行工作流：<span class="text-secondary" style="">警告</span></p>
+</div>
+<!-- Log Entry: ERROR -->
+<div class="flex flex-col gap-1 border-l-2 border-tertiary/40 pl-3">
+<div class="flex items-center gap-2">
+<span class="font-mono text-[10px] text-outline" style="">警告</span>
+<span class="bg-tertiary/10 text-tertiary text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-tighter border border-tertiary/20" style="">错误</span>
+</div>
+<p class="log-line text-xs text-on-surface leading-relaxed" style="">远程节点 <span class="underline decoration-tertiary/40" style="">警告</span> 身份验证失败。拒绝访问。</p>
+</div>
+<!-- Log Entry: INFO -->
+<div class="flex flex-col gap-1 border-l-2 border-primary/40 pl-3">
+<div class="flex items-center gap-2">
+<span class="font-mono text-[10px] text-outline" style="">警告</span>
+<span class="bg-primary/10 text-primary text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-tighter border border-primary/20" style="">信息</span>
+</div>
+<p class="log-line text-xs text-on-surface leading-relaxed" style="">正在通过备份矢量 (proxy_alpha) 重试连接...</p>
+</div>
+<!-- Active Cursor -->
+<div class="flex items-center gap-2 pl-3">
+<span class="font-mono text-primary text-xs tracking-tighter" style="">警告</span>
+<div class="w-1.5 h-4 bg-primary/60 animate-pulse"></div>
+</div>
+</div>
+<!-- Footer Stats -->
+<div class="bg-surface-container-low px-4 py-3 border-t border-outline-variant/10 flex justify-between">
+<div class="flex gap-4">
+<div class="flex flex-col">
+<span class="text-[8px] uppercase text-outline font-bold tracking-widest" style="">警告</span>
+<span class="text-tertiary font-mono font-bold text-xs" style="">01</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[8px] uppercase text-outline font-bold tracking-widest" style="">警告</span>
+<span class="text-secondary font-mono font-bold text-xs" style="">01</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[8px] uppercase text-outline font-bold tracking-widest" style="">运行时间</span>
+<span class="text-primary font-mono font-bold text-xs" style="">02:44:12</span>
+</div>
+</div>
+<div class="self-end">
+<span class="text-[8px] uppercase text-on-surface-variant font-bold tracking-widest" style="">警告</span>
+</div>
+</div>
+</div>
+<!-- System Alerts Bento -->
+<section class="grid grid-cols-2 gap-3">
+<div class="bg-surface-container p-4 rounded-xl flex flex-col gap-2">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="memory" style="">错误</span>
+<div>
+<h3 class="font-headline text-[10px] uppercase font-bold text-outline tracking-wider" style="">CPU 使用率</h3>
+<p class="text-lg font-mono text-on-surface leading-none" style="">24.2%</p>
+</div>
+</div>
+<div class="bg-surface-container p-4 rounded-xl flex flex-col gap-2">
+<span class="material-symbols-outlined text-secondary text-xl" data-icon="database" style="">警告</span>
+<div>
+<h3 class="font-headline text-[10px] uppercase font-bold text-outline tracking-wider" style="">磁盘 I/O</h3>
+<p class="text-lg font-mono text-on-surface leading-none" style="">12.8 MB/s</p>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 pb-safe px-4 bg-[#0f141a]/90 backdrop-blur-md shadow-[0_-8px_24px_rgba(0,0,0,0.5)] border-t border-[#44484f]/15">
+<a class="flex flex-col items-center justify-center text-[#f1f3fc]/40 hover:text-[#00F5FF] transition-colors active:opacity-80" href="#" style="">
+<span class="material-symbols-outlined" data-icon="folder_open" style="">folder_open</span>
+<span class="font-inter text-[10px] font-medium tracking-tight" style="">脚本库</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#f1f3fc]/40 hover:text-[#00F5FF] transition-colors active:opacity-80" href="#" style="">
+<span class="material-symbols-outlined" data-icon="code" style="">code</span>
+<span class="font-inter text-[10px] font-medium tracking-tight" style="">编辑器</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#f1f3fc]/40 hover:text-[#00F5FF] transition-colors active:opacity-80" href="#" style="">
+<span class="material-symbols-outlined" data-icon="event_repeat" style="">event_repeat</span>
+<span class="font-inter text-[10px] font-medium tracking-tight" style="">计划</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#9cff93] transition-all duration-300 before:content-[''] before:w-1 before:h-1 before:bg-[#9cff93] before:rounded-full before:mb-1" href="#" style="">
+<span class="material-symbols-outlined" data-icon="receipt_long" style="">receipt_long</span>
+<span class="font-inter text-[10px] font-medium tracking-tight" style="">日志</span>
+</a>
+</nav>
+</body></html>

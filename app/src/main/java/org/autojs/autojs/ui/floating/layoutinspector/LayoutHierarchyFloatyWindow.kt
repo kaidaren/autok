@@ -7,16 +7,33 @@ import android.view.ContextThemeWrapper
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.HorizontalScrollView
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.border
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,8 +46,11 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
@@ -70,7 +90,7 @@ open class LayoutHierarchyFloatyWindow(private val mRootNode: NodeInfo) : FullSc
 
         val view = ComposeView(mContext!!).apply {
             isFocusableInTouchMode = true
-            setOnKeyListener { view, i, event ->
+            setOnKeyListener { _, _, event ->
                 if (event.keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
                     showLayoutBounds()
                     return@setOnKeyListener true
@@ -100,8 +120,6 @@ open class LayoutHierarchyFloatyWindow(private val mRootNode: NodeInfo) : FullSc
 
     @Composable
     private fun Content() {
-        val context = LocalContext.current
-
         Box(modifier = Modifier.fillMaxSize()) {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -133,14 +151,80 @@ open class LayoutHierarchyFloatyWindow(private val mRootNode: NodeInfo) : FullSc
                 var isShowLayoutHierarchyView by remember {
                     mutableStateOf(true)
                 }
-                Box(
+                val searchQuery = remember { mutableStateOf("") }
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp, vertical = 8.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0x800F141A))
+                ) {
+                    OutlinedTextField(
+                        value = searchQuery.value,
+                        onValueChange = {
+                            searchQuery.value = it
+                            mLayoutHierarchyView?.setFilterQuery(it)
+                        },
+                        placeholder = {
+                            Text(
+                                text = "搜索节点 (类名, ID, 文本)...",
+                                color = Color(0xFF5C6370),
+                                fontSize = 10.sp
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_search),
+                                contentDescription = null,
+                                tint = Color(0xFF5C6370)
+                            )
+                        },
+                        trailingIcon = {
+                            Text(
+                                text = "ALT+F",
+                                color = Color(0xFF5C6370),
+                                fontSize = 9.sp,
+                                modifier = Modifier
+                                    .background(Color(0xFF18181B), RoundedCornerShape(6.dp))
+                                    .padding(horizontal = 6.dp, vertical = 2.dp)
+                            )
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp, vertical = 8.dp),
+                        singleLine = true,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedContainerColor = Color(0xFF0A0E14),
+                            unfocusedContainerColor = Color(0xFF0A0E14),
+                            focusedBorderColor = Color(0x339CFF93),
+                            unfocusedBorderColor = Color(0x33242C39),
+                            cursorColor = Color(0xFF9CFF93),
+                            focusedTextColor = Color(0xFF9CFF93),
+                            unfocusedTextColor = Color(0xFF9CFF93),
+                        )
+                    )
+                }
+                Card(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
+                        .padding(horizontal = 10.dp, vertical = 4.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0x66000000))
                 ) {
                     AndroidView(
                         factory = {
-                            mLayoutHierarchyView!!
+                            HorizontalScrollView(mContext).apply {
+                                isHorizontalScrollBarEnabled = false
+                                isFillViewport = true
+                                addView(
+                                    mLayoutHierarchyView,
+                                    ViewGroup.LayoutParams(
+                                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                                        ViewGroup.LayoutParams.MATCH_PARENT
+                                    )
+                                )
+                            }
                         },
                         modifier = Modifier.fillMaxSize(),
                         update = {
@@ -148,21 +232,24 @@ open class LayoutHierarchyFloatyWindow(private val mRootNode: NodeInfo) : FullSc
                         }
                     )
                 }
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Spacer(modifier = Modifier.weight(1f))
-                    Button(
-                        onClick = { close() },
-                    ) {
-                        Text(text = stringResource(R.string.text_exit_floating_window))
-                    }
-                    Button(
-                        onClick = { isShowLayoutHierarchyView = !isShowLayoutHierarchyView },
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                    ) {
-                        Text(text = stringResource(R.string.text_hide_and_show))
-                    }
-                }
+            }
+            Button(
+                onClick = { close() },
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = 22.dp, bottom = 28.dp)
+                    .size(64.dp),
+                shape = CircleShape,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFFF4D5A),
+                    contentColor = Color.White
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = null,
+                    modifier = Modifier.size(46.dp)
+                )
             }
         }
     }
@@ -171,8 +258,9 @@ open class LayoutHierarchyFloatyWindow(private val mRootNode: NodeInfo) : FullSc
     override fun onViewCreated(v: View) {
         mLayoutHierarchyView!!.setBackgroundColor(COLOR_SHADOW)
         mLayoutHierarchyView!!.setShowClickedNodeBounds(true)
-        mLayoutHierarchyView!!.boundsPaint?.strokeWidth = 3f
-        mLayoutHierarchyView!!.boundsPaint?.color = -0x2cd0d1
+        mLayoutHierarchyView!!.setClickedColor(android.graphics.Color.parseColor("#2237E2D5"))
+        mLayoutHierarchyView!!.boundsPaint?.strokeWidth = 4f
+        mLayoutHierarchyView!!.boundsPaint?.color = android.graphics.Color.parseColor("#00F4FE")
         mLayoutHierarchyView!!.setOnItemLongClickListener { view: View, nodeInfo: NodeInfo ->
             mSelectedNode = nodeInfo
             ensureOperationPopMenu()
@@ -196,7 +284,7 @@ open class LayoutHierarchyFloatyWindow(private val mRootNode: NodeInfo) : FullSc
                 mContext!!.getString(R.string.text_generate_code)
             )
         )
-        mBubblePopMenu!!.setOnItemClickListener { view: View?, position: Int ->
+        mBubblePopMenu!!.setOnItemClickListener { _: View?, position: Int ->
             mBubblePopMenu!!.dismiss()
             when (position) {
                 0 -> {
@@ -241,7 +329,7 @@ open class LayoutHierarchyFloatyWindow(private val mRootNode: NodeInfo) : FullSc
             mNodeInfoView = NodeInfoView(mContext!!)
             mNodeInfoDialog = MaterialDialog.Builder(mContext!!)
                 .customView(mNodeInfoView!!, false)
-                .theme(Theme.LIGHT)
+                .theme(Theme.DARK)
                 .build()
             mNodeInfoDialog!!.window?.setType(FloatyWindowManger.getWindowType())
         }
@@ -253,6 +341,6 @@ open class LayoutHierarchyFloatyWindow(private val mRootNode: NodeInfo) : FullSc
 
     companion object {
         private const val TAG = "FloatingHierarchyView"
-        private const val COLOR_SHADOW = -0x22000001
+        private const val COLOR_SHADOW = -0x77000000
     }
 }

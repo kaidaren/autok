@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- ============================================================ -->
+    <!-- KINETIC DESIGN SYSTEM - Styles & Components -->
+    <!-- ============================================================ -->
+
+    <!-- Base Theme - Kinetic Design System -->
+    <style name="ThemeKinetic" parent="Theme.Material3.DayNight">
+        <!-- Primary colors -->
+        <item name="colorPrimary">@color/kinetic_primary</item>
+        <item name="colorOnPrimary">@color/kinetic_on_primary</item>
+        <item name="colorPrimaryContainer">@color/kinetic_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/kinetic_on_primary_container</item>
+
+        <!-- Secondary colors -->
+        <item name="colorSecondary">@color/kinetic_secondary</item>
+        <item name="colorOnSecondary">@color/kinetic_on_secondary</item>
+        <item name="colorSecondaryContainer">@color/kinetic_secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/kinetic_on_secondary_container</item>
+
+        <!-- Tertiary colors -->
+        <item name="colorTertiary">@color/kinetic_tertiary</item>
+        <item name="colorOnTertiary">@color/kinetic_on_tertiary</item>
+        <item name="colorTertiaryContainer">@color/kinetic_tertiary_container</item>
+        <item name="colorOnTertiaryContainer">@color/kinetic_on_tertiary_container</item>
+
+        <!-- Error colors -->
+        <item name="colorError">@color/kinetic_error</item>
+        <item name="colorOnError">@color/kinetic_on_error</item>
+        <item name="colorErrorContainer">@color/kinetic_error_container</item>
+        <item name="colorOnErrorContainer">@color/kinetic_on_error_container</item>
+
+        <!-- Surface colors -->
+        <item name="android:colorBackground">@color/kinetic_surface</item>
+        <item name="colorSurface">@color/kinetic_surface</item>
+        <item name="colorOnSurface">@color/kinetic_on_surface</item>
+        <item name="colorSurfaceVariant">@color/kinetic_surface_container_low</item>
+        <item name="colorOnSurfaceVariant">@color/kinetic_on_surface_variant</item>
+
+        <!-- Typography -->
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <!-- ============================================================ -->
+    <!-- KINETIC BUTTON STYLES -->
+    <!-- ============================================================ -->
+
+    <!-- Primary Button with Gradient -->
+    <style name="KineticButtonPrimary" parent="Widget.Material3.Button.ElevatedButton">
+        <item name="android:textSize">@dimen/kinetic_text_label_large</item>
+        <item name="android:textColor">@color/kinetic_on_primary</item>
+        <item name="android:paddingStart">@dimen/kinetic_spacing_lg</item>
+        <item name="android:paddingEnd">@dimen/kinetic_spacing_lg</item>
+        <item name="android:paddingTop">@dimen/kinetic_spacing_sm</item>
+        <item name="android:paddingBottom">@dimen/kinetic_spacing_sm</item>
+        <item name="cornerRadius">@dimen/kinetic_radius_md</item>
+        <item name="android:minHeight">@dimen/kinetic_button_height</item>
+        <item name="backgroundTint">@color/kinetic_primary</item>
+    </style>
+
+    <!-- Secondary Button -->
+    <style name="KineticButtonSecondary" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:textSize">@dimen/kinetic_text_label_large</item>
+        <item name="android:textColor">@color/kinetic_on_surface</item>
+        <item name="android:paddingStart">@dimen/kinetic_spacing_lg</item>
+        <item name="android:paddingEnd">@dimen/kinetic_spacing_lg</item>
+        <item name="cornerRadius">@dimen/kinetic_radius_md</item>
+        <item name="android:minHeight">@dimen/kinetic_button_height</item>
+        <item name="strokeColor">@color/kinetic_outline</item>
+        <item name="strokeWidth">@dimen/kinetic_stroke_medium</item>
+    </style>
+
+    <!-- Tonal Button -->
+    <style name="KineticButtonTonal" parent="Widget.Material3.Button.TonalButton">
+        <item name="android:textSize">@dimen/kinetic_text_label_large</item>
+        <item name="android:textColor">@color/kinetic_on_surface</item>
+        <item name="android:paddingStart">@dimen/kinetic_spacing_lg</item>
+        <item name="android:paddingEnd">@dimen/kinetic_spacing_lg</item>
+        <item name="cornerRadius">@dimen/kinetic_radius_md</item>
+        <item name="android:minHeight">@dimen/kinetic_button_height</item>
+        <item name="backgroundTint">@color/kinetic_surface_container_high</item>
+    </style>
+
+    <!-- ============================================================ -->
+    <!-- KINETIC TEXT INPUT STYLES -->
+    <!-- ============================================================ -->
+
+    <style name="KineticTextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="android:textColorHint">@color/kinetic_on_surface_variant</item>
+        <item name="hintTextColor">@color/kinetic_on_surface_variant</item>
+        <item name="boxStrokeColor">@color/kinetic_outline</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/kinetic_radius_md</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/kinetic_radius_md</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/kinetic_radius_md</item>
+        <item name="boxCornerRadiusTopStart">@dimen/kinetic_radius_md</item>
+    </style>
+
+    <!-- ============================================================ -->
+    <!-- KINETIC TOOLBAR STYLES -->
+    <!-- ============================================================ -->
+
+    <style name="KineticToolbar" parent="Widget.Material3.AppBarLayout">
+        <item name="android:background">@color/kinetic_surface</item>
+        <item name="elevation">0dp</item>
+        <item name="titleTextColor">@color/kinetic_on_surface</item>
+        <item name="subtitleTextColor">@color/kinetic_on_surface_variant</item>
+    </style>
+
+    <!-- ============================================================ -->
+    <!-- KINETIC SEARCH VIEW STYLES -->
+    <!-- ============================================================ -->
+
+    <style name="KineticSearchView" parent="Widget.AppCompat.SearchView">
+        <item name="android:background">@drawable/search_view_background</item>
+        <item name="android:textColor">@color/kinetic_on_surface</item>
+        <item name="android:textColorHint">@color/kinetic_on_surface_variant</item>
+    </style>
+
+    <!-- ============================================================ -->
+    <!-- KINETIC CARD STYLES -->
+    <!-- ============================================================ -->
+
+    <style name="KineticCard" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardBackgroundColor">@color/kinetic_surface_container_lowest</item>
+        <item name="cardCornerRadius">@dimen/kinetic_radius_lg</item>
+        <item name="cardElevation">2dp</item>
+        <item name="android:padding">@dimen/kinetic_spacing_md</item>
+    </style>
+
+    <!-- ============================================================ -->
+    <!-- KINETIC CHIP STYLES -->
+    <!-- ============================================================ -->
+
+    <style name="KineticChip" parent="Widget.Material3.Chip.Filled">
+        <item name="chipCornerRadius">@dimen/kinetic_radius_full</item>
+        <item name="android:textSize">@dimen/kinetic_text_label_sm</item>
+    </style>
+
+    <!-- ============================================================ -->
+    <!-- KINETIC BOTTOM NAVIGATION -->
+    <!-- ============================================================ -->
+
+    <style name="KineticBottomNavigation" parent="Widget.Material3.BottomNavigationView">
+        <item name="android:background">@drawable/bottom_nav_glass_background</item>
+        <item name="itemTextColor">@color/kinetic_on_surface</item>
+        <item name="itemIconTint">@color/kinetic_on_surface</item>
+    </style>
+
+    <!-- ============================================================ -->
+    <!-- KINETIC TEXT STYLES -->
+    <!-- ============================================================ -->
+
+    <style name="KineticHeadline" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:textSize">@dimen/kinetic_text_headline_small</item>
+        <item name="android:textColor">@color/kinetic_on_surface</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">-0.02</item>
+    </style>
+
+    <style name="KineticTitle" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textSize">@dimen/kinetic_text_title_md</item>
+        <item name="android:textColor">@color/kinetic_on_surface</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="KineticBody" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textSize">@dimen/kinetic_text_body_md</item>
+        <item name="android:textColor">@color/kinetic_on_surface</item>
+    </style>
+
+    <style name="KineticLabel" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:textSize">@dimen/kinetic_text_label_sm</item>
+        <item name="android:textColor">@color/kinetic_on_surface_variant</item>
+    </style>
+
+</resources>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: {
+                            400: '#34d399',
+                            500: '#10b981',
+                        },
+                        zinc: {
+                            800: '#27272a',
+                            900: '#18181b',
+                        }
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    fontFamily: {
+                        "headline": ["Public Sans"],
+                        "body": ["Public Sans"],
+                        "label": ["Public Sans"],
+                        "mono": ["JetBrains Mono"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Public Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .node-tree-line {
+            border-left: 1px solid rgba(16, 185, 129, 0.15);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(16, 185, 129, 0.3);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-zinc-950 min-h-screen flex items-center justify-center overflow-hidden">
+<!-- Background Mockup Content (Simulating another app behind the overlay) -->
+<div class="fixed inset-0 z-0 flex flex-col items-center justify-center pointer-events-none filter blur-md scale-105 opacity-30">
+<div class="w-full h-full bg-white flex flex-col">
+<div class="h-16 bg-zinc-100 flex items-center justify-between px-8">
+<div class="font-bold text-xl">9:41</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined">signal_cellular_4_bar</span>
+<span class="material-symbols-outlined">wifi</span>
+<span class="material-symbols-outlined">battery_full</span>
+</div>
+</div>
+<div class="p-10 flex flex-col gap-8">
+<div class="h-20 bg-zinc-200 rounded-2xl w-3/4"></div>
+<div class="aspect-video bg-zinc-100 rounded-3xl flex items-center justify-center">
+<span class="material-symbols-outlined text-zinc-300 text-9xl">image</span>
+</div>
+<div class="h-8 bg-zinc-200 rounded-lg w-full"></div>
+<div class="h-8 bg-zinc-200 rounded-lg w-5/6"></div>
+<div class="h-8 bg-zinc-200 rounded-lg w-4/6"></div>
+<div class="mt-12 h-20 bg-blue-600 rounded-2xl"></div>
+</div>
+</div>
+</div>
+<!-- Full Screen Overlay Container -->
+<div class="fixed inset-0 z-10 bg-black/60 backdrop-blur-[2px] flex flex-col p-4 md:p-8">
+<!-- MAIN WINDOW: Accessibility Inspector -->
+<main class="relative w-full h-full flex flex-col shadow-2xl border border-zinc-800 dark:border-zinc-700 bg-zinc-900/90 backdrop-blur-xl rounded-2xl overflow-hidden ring-1 ring-emerald-500/20">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-6 py-4 bg-zinc-900/95 border-b border-zinc-800 dark:border-zinc-700">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-emerald-400 text-2xl" data-icon="visibility">visibility</span>
+<h1 class="font-mono text-sm uppercase tracking-widest font-bold text-emerald-400">Accessibility Inspector</h1>
+</div>
+<div class="flex items-center gap-3">
+<div class="hidden md:flex items-center gap-2 px-3 py-1 bg-zinc-800 rounded border border-zinc-700">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+<span class="font-mono text-[10px] text-emerald-500">实时模式</span>
+</div>
+<button class="p-2 text-zinc-500 hover:bg-zinc-800 hover:text-white transition-colors rounded-lg">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</header>
+<!-- Search Bar Area -->
+<section class="p-4 bg-zinc-900/50 border-b border-zinc-800/50">
+<div class="relative flex items-center max-w-2xl mx-auto w-full">
+<span class="absolute left-4 material-symbols-outlined text-zinc-500 text-lg">search</span>
+<input class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-12 py-3 text-sm font-mono text-emerald-400 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-emerald-500/50" placeholder="搜索节点 (类名, ID, 文本)..." type="text"/>
+<span class="absolute right-4 font-mono text-[10px] text-zinc-600 bg-zinc-900 px-2 py-1 rounded">ALT+F</span>
+</div>
+</section>
+<!-- Node Tree Content (Focused on recursive structure) -->
+<div class="flex-1 overflow-y-auto bg-black/40 p-4 font-mono text-xs md:text-sm leading-relaxed custom-scrollbar">
+<!-- Root Level -->
+<div class="mb-1">
+<div class="flex items-center gap-2 p-2 rounded hover:bg-zinc-800 cursor-pointer text-zinc-400 group">
+<span class="material-symbols-outlined text-emerald-500 text-lg">expand_more</span>
+<span class="text-[10px] opacity-50">0</span>
+<span class="text-emerald-400 font-bold">FrameLayout</span>
+<span class="text-zinc-600 text-[10px] ml-2">com.android.internal.policy.DecorView</span>
+</div>
+<!-- Indented Level 1 -->
+<div class="ml-6 node-tree-line">
+<div class="flex items-center gap-2 p-2 rounded hover:bg-zinc-800 cursor-pointer text-zinc-400 group">
+<span class="material-symbols-outlined text-emerald-500 text-lg">expand_more</span>
+<span class="text-[10px] opacity-50">1</span>
+<span class="text-emerald-400 font-bold">LinearLayout</span>
+<span class="text-zinc-600 text-[10px] ml-2">id/content</span>
+</div>
+<!-- Indented Level 2 -->
+<div class="ml-6 node-tree-line">
+<!-- Selected Node Highlight -->
+<div class="flex items-center gap-2 p-2 rounded bg-emerald-500/10 border border-emerald-500/20 cursor-pointer text-emerald-400">
+<span class="material-symbols-outlined text-lg">expand_more</span>
+<span class="text-[10px] opacity-70">2</span>
+<span class="font-bold underline decoration-emerald-500/40">ConstraintLayout</span>
+<span class="text-emerald-500/60 text-[10px] ml-2">id/login_container</span>
+<span class="ml-auto text-[9px] uppercase tracking-tighter bg-emerald-500 text-black px-1 rounded font-bold">已展开</span>
+</div>
+<!-- Indented Level 3 (Children of Selected Node) -->
+<div class="ml-6 node-tree-line">
+<div class="flex items-center gap-2 p-2 rounded hover:bg-zinc-800 cursor-pointer text-zinc-400 group">
+<span class="material-symbols-outlined text-zinc-600 text-lg">chevron_right</span>
+<span class="text-[10px] opacity-50">3</span>
+<span class="text-white">ImageView</span>
+<span class="text-zinc-600 text-[10px] ml-2">id/app_logo</span>
+</div>
+<div class="flex items-center gap-2 p-2 rounded hover:bg-zinc-800 cursor-pointer text-zinc-400 group">
+<span class="material-symbols-outlined text-zinc-600 text-lg">chevron_right</span>
+<span class="text-[10px] opacity-50">3</span>
+<span class="text-white">TextView</span>
+<span class="text-zinc-600 text-[10px] ml-2">"欢迎回来"</span>
+</div>
+<div class="flex items-center gap-2 p-2 rounded hover:bg-zinc-800 cursor-pointer text-zinc-400 group">
+<span class="material-symbols-outlined text-zinc-600 text-lg">chevron_right</span>
+<span class="text-[10px] opacity-50">3</span>
+<span class="text-white">EditText</span>
+<span class="text-zinc-600 text-[10px] ml-2">id/username_input</span>
+</div>
+<div class="flex items-center gap-2 p-2 rounded hover:bg-zinc-800 cursor-pointer text-zinc-400 group">
+<span class="material-symbols-outlined text-emerald-500 text-lg">expand_more</span>
+<span class="text-[10px] opacity-50">3</span>
+<span class="text-emerald-400 font-bold">Button</span>
+<span class="text-zinc-600 text-[10px] ml-2">id/login_btn</span>
+</div>
+<!-- Nested under Button -->
+<div class="ml-6 node-tree-line">
+<div class="flex items-center gap-2 p-2 rounded hover:bg-zinc-800 cursor-pointer text-zinc-400 group">
+<span class="material-symbols-outlined text-zinc-600 text-lg">radio_button_unchecked</span>
+<span class="text-[10px] opacity-50">4</span>
+<span class="text-zinc-300">TextView</span>
+<span class="text-emerald-500/80 text-[10px] ml-2">"登录"</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 p-2 rounded hover:bg-zinc-800 cursor-pointer text-zinc-400 group">
+<span class="material-symbols-outlined text-zinc-600 text-lg">chevron_right</span>
+<span class="text-[10px] opacity-50">2</span>
+<span class="text-white">View</span>
+<span class="text-zinc-600 text-[10px] ml-2">id/divider</span>
+</div>
+</div>
+<div class="ml-6 node-tree-line">
+<div class="flex items-center gap-2 p-2 rounded hover:bg-zinc-800 cursor-pointer text-zinc-400 group">
+<span class="material-symbols-outlined text-emerald-500 text-lg">expand_more</span>
+<span class="text-[10px] opacity-50">1</span>
+<span class="text-emerald-400 font-bold">RecyclerView</span>
+<span class="text-zinc-600 text-[10px] ml-2">id/news_list</span>
+</div>
+<div class="ml-6 node-tree-line">
+<div class="flex items-center gap-2 p-2 rounded hover:bg-zinc-800 cursor-pointer text-zinc-400 group">
+<span class="material-symbols-outlined text-zinc-600 text-lg">chevron_right</span>
+<span class="text-[10px] opacity-50">2</span>
+<span class="text-white">LinearLayout</span>
+<span class="text-zinc-500 text-[10px] ml-2">[Item 0]</span>
+</div>
+<div class="flex items-center gap-2 p-2 rounded hover:bg-zinc-800 cursor-pointer text-zinc-400 group">
+<span class="material-symbols-outlined text-zinc-600 text-lg">chevron_right</span>
+<span class="text-[10px] opacity-50">2</span>
+<span class="text-white">LinearLayout</span>
+<span class="text-zinc-500 text-[10px] ml-2">[Item 1]</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Tool Bar -->
+<nav class="w-full flex justify-around items-center p-4 bg-zinc-900 border-t border-zinc-800">
+<button class="flex items-center justify-center text-emerald-400 bg-emerald-500/10 rounded-xl px-6 py-3 transition-all hover:bg-emerald-500/20">
+<span class="material-symbols-outlined mr-2" data-icon="account_tree">account_tree</span>
+<span class="text-[10px] font-bold uppercase tracking-widest">节点树</span>
+</button>
+<button class="flex items-center justify-center text-zinc-500 px-6 py-3 transition-all hover:text-emerald-400">
+<span class="material-symbols-outlined" data-icon="reorder">reorder</span>
+</button>
+<button class="flex items-center justify-center text-zinc-500 px-6 py-3 transition-all hover:text-emerald-400">
+<span class="material-symbols-outlined" data-icon="settings_ethernet">settings_ethernet</span>
+</button>
+<button class="flex items-center justify-center text-zinc-500 px-6 py-3 transition-all hover:text-emerald-400">
+<span class="material-symbols-outlined" data-icon="terminal">terminal</span>
+</button>
+</nav>
+</main>
+</div>
+<!-- CRITICAL: Close Window Floating Action Button -->
+<div class="fixed bottom-10 right-10 z-50">
+<button class="w-16 h-16 bg-red-500 text-white rounded-full shadow-[0_0_30px_rgba(239,68,68,0.4)] flex items-center justify-center hover:scale-110 active:scale-95 transition-transform group">
+<span class="material-symbols-outlined text-4xl">close</span>
+<div class="absolute right-20 bg-zinc-900 border border-zinc-800 text-zinc-400 text-xs font-bold px-4 py-2 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-2xl">
+                关闭检查器
+            </div>
+</button>
+</div>
+<!-- System Status Overlays -->
+<div class="fixed bottom-4 left-4 z-50 flex gap-4 pointer-events-none">
+<div class="px-4 py-1.5 bg-emerald-500/10 border border-emerald-500/20 backdrop-blur-md rounded-full text-[10px] font-mono text-emerald-500 flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            服务: 已连接
+        </div>
+<div class="hidden sm:flex px-4 py-1.5 bg-zinc-900/80 border border-zinc-800 backdrop-blur-md rounded-full text-[10px] font-mono text-zinc-400">
+            日志: [204] 缓冲区正常
+        </div>
+</div>
+</body></html>

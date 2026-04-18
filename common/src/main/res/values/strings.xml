@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Settings -->
+    <string name="action_settings">Settings</string>
+
+    <!-- Kinetic Design System - UI Strings -->
+    <string name="app_name">AutoX AIselp</string>
+    <string name="accessibility_inspector">Accessibility Inspector</string>
+    <string name="search_nodes_hint">Search nodes (class name, ID, text)...</string>
+    <string name="filter">Filter</string>
+    <string name="node_tree">Node Tree</string>
+    <string name="properties">Properties</string>
+    <string name="hierarchy">Hierarchy</string>
+    <string name="terminal">Terminal</string>
+
+    <!-- Screen Titles -->
+    <string name="screen_one_title">Accessibility Inspector</string>
+    <string name="screen_two_title">Performance Monitor</string>
+    <string name="screen_three_title">Node Inspector</string>
+    <string name="screen_four_title">Automation Console</string>
+    <string name="screen_five_title">Script Editor</string>
+    <string name="screen_six_title">Settings</string>
+
+    <!-- Common Actions -->
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="close">Close</string>
+    <string name="done">Done</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
+
+</resources>
+

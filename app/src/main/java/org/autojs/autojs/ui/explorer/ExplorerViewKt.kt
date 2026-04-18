@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -571,7 +572,11 @@ open class ExplorerViewKt : FrameLayout, ViewTreeObserver.OnGlobalFocusChangeLis
                     onClick = { onItemClick() },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 4.dp, vertical = 5.dp)
+                        .padding(horizontal = 4.dp, vertical = 5.dp),
+                    colors = CardDefaults.elevatedCardColors(
+                        containerColor = Color(0xFF2A3038),
+                        contentColor = Color(0xFFF1F3FC)
+                    )
                 ) {
                     Row(
                         modifier = Modifier.height(48.dp),

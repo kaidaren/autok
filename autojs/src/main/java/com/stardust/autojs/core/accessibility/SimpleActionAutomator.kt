@@ -24,6 +24,8 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.runBlocking
+import java.lang.reflect.Proxy
+import java.util.concurrent.Executor
 
 /**
  * Created by Stardust on 2017/4/2.
@@ -41,27 +43,46 @@ class SimpleActionAutomator(
     private val isRunningPackageSelf: Boolean
         get() = DeveloperUtils.isSelfPackage(mAccessibilityBridge.infoProvider.latestPackage)
 
-    @RequiresApi(Build.VERSION_CODES.R)
     @ScriptInterface
     fun takeScreenshot2(callback: ((ImageWrapper?, errCode: Int) -> Unit)?) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            callback?.invoke(null, -1)
+            return
+        }
         ensureAccessibilityServiceEnabled()
         val service = mAccessibilityBridge.service!!
-        service.takeScreenshot(
-            Display.DEFAULT_DISPLAY,
-            Dispatchers.Default.asExecutor(),
-            object : AccessibilityService.TakeScreenshotCallback {
-                override fun onSuccess(screenshot: AccessibilityService.ScreenshotResult) {
-                    val bitmap =
-                        Bitmap.wrapHardwareBuffer(screenshot.hardwareBuffer, screenshot.colorSpace)
-                    val imageWrapper = ImageWrapper.ofBitmap(bitmap)
-                    callback?.invoke(imageWrapper, 0)
+        try {
+            val callbackClass = Class.forName("android.accessibilityservice.AccessibilityService\$TakeScreenshotCallback")
+            val method = service.javaClass.getMethod(
+                "takeScreenshot",
+                Int::class.javaPrimitiveType,
+                Executor::class.java,
+                callbackClass
+            )
+            val proxyCallback = Proxy.newProxyInstance(
+                callbackClass.classLoader,
+                arrayOf(callbackClass)
+            ) { _, calledMethod, args ->
+                when (calledMethod.name) {
+                    "onSuccess" -> {
+                        val screenshot = args?.getOrNull(0)
+                        val hardwareBuffer = screenshot?.javaClass?.getMethod("getHardwareBuffer")?.invoke(screenshot)
+                        val colorSpace = screenshot?.javaClass?.getMethod("getColorSpace")?.invoke(screenshot)
+                        val bitmap = Bitmap.wrapHardwareBuffer(hardwareBuffer as android.hardware.HardwareBuffer, colorSpace as android.graphics.ColorSpace)
+                        val imageWrapper = ImageWrapper.ofBitmap(bitmap)
+                        callback?.invoke(imageWrapper, 0)
+                    }
+                    "onFailure" -> {
+                        val errCode = (args?.getOrNull(0) as? Int) ?: -1
+                        callback?.invoke(null, errCode)
+                    }
                 }
-
-                override fun onFailure(errorCode: Int) {
-                    callback?.invoke(null, errorCode)
-                }
+                null
             }
-        )
+            method.invoke(service, Display.DEFAULT_DISPLAY, Dispatchers.Default.asExecutor(), proxyCallback)
+        } catch (t: Throwable) {
+            callback?.invoke(null, -1)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.R)

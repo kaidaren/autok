@@ -2,14 +2,18 @@ package org.autojs.autojs.devplugin
 
 import android.os.Build
 import android.util.Log
+import android.app.Application
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.google.gson.JsonPrimitive
 import com.stardust.app.GlobalAppContext
 import com.stardust.autojs.core.console.LogEntry
+import com.stardust.autojs.servicecomponents.ScriptServiceConnection
 import com.stardust.autojs.servicecomponents.BinderConsoleListener
 import com.stardust.autojs.servicecomponents.EngineController
+import com.stardust.autojs.IndependentScriptService
 import io.ktor.websocket.CloseReason
 import io.ktor.websocket.Frame
 import io.ktor.websocket.FrameType
@@ -30,6 +34,8 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import okio.ByteString.Companion.toByteString
 import org.autojs.autojs.devplugin.message.Hello
 import org.autojs.autojs.devplugin.message.HelloResponse
@@ -39,6 +45,7 @@ import org.autojs.autoxjs.BuildConfig
 import org.autojs.autoxjs.R
 import java.io.File
 import java.net.SocketTimeoutException
+import java.nio.charset.StandardCharsets
 
 object DevPlugin {
 
@@ -63,6 +70,16 @@ object DevPlugin {
     private const val TYPE_CLOSE = "close"
     private const val TYPE_BYTES_COMMAND = "bytes_command"
     private const val maxRetry = 3
+    /**
+     * VSCode `websocket` default max frame is 128KiB; chunk before we exceed a safe whole-message size.
+     */
+    private const val SCREEN_CAPTURE_SINGLE_FRAME_UTF8_MAX = 120 * 1024
+    /** Also chunk large Base64 even if UTF-8 estimate is borderline. */
+    private const val SCREEN_CAPTURE_SINGLE_FRAME_BASE64_MAX = 80_000
+    /**
+     * Base64 chars per chunk (multiple of 4). With JSON wrapper must stay under ~128KiB peer frame limit.
+     */
+    private const val SCREEN_CAPTURE_CHUNK_CHARS = 96 * 1024
 
     private val _connectState = MutableSharedFlow<State>()
     private val client by lazy { WebSocketClient() }
@@ -72,9 +89,71 @@ object DevPlugin {
     val isActive get() = connection?.isActive ?: false
     private val bytesMap = HashMap<String, Bytes>()
     private val requiredBytesCommands = HashMap<String, JsonObject>()
+    private val devToolMutex = Mutex()
     private val responseHandler: DevPluginResponseHandler by lazy {
         val cache = File(GlobalAppContext.get().cacheDir, "remote_project")
         DevPluginResponseHandler(cache)
+    }
+    private val devToolDebounceMutex = Mutex()
+    private val devToolLastCommandAt = HashMap<String, Long>()
+    private const val DEV_TOOL_DEBOUNCE_MS = 1000L
+    @Volatile
+    private var devToolMessageHandler: DevToolMessageHandler? = null
+
+    private fun isMlKitAlreadyInitializedError(t: Throwable): Boolean {
+        val msg = t.message?.lowercase().orEmpty()
+        if (msg.contains("mlkitcontext is already initialized")) return true
+        return t.cause?.message?.lowercase()?.contains("mlkitcontext is already initialized") == true
+    }
+
+    private fun ensureDevToolMessageHandler(statusReporter: ((String) -> Unit)? = null): DevToolMessageHandler? {
+        devToolMessageHandler?.let { return it }
+        return try {
+            val autoJs = org.autojs.autojs.autojs.AutoJs.getInstance() as org.autojs.autojs.autojs.AutoJs
+            DevToolMessageHandler(autoJs, statusReporter).also { devToolMessageHandler = it }
+        } catch (e: UninitializedPropertyAccessException) {
+            try {
+                statusReporter?.invoke("初始化AutoJs中…")
+                org.autojs.autojs.autojs.AutoJs.initInstance(GlobalAppContext.get() as Application)
+                val autoJs = org.autojs.autojs.autojs.AutoJs.getInstance() as org.autojs.autojs.autojs.AutoJs
+                DevToolMessageHandler(autoJs, statusReporter).also { devToolMessageHandler = it }
+            } catch (t: Throwable) {
+                Log.w(TAG, "AutoJs instance is not initialized yet for devtools", t)
+                null
+            }
+        } catch (e: Throwable) {
+            Log.e(TAG, "ensureDevToolMessageHandler failed", e)
+            null
+        }
+    }
+
+    private suspend fun ensureDevToolMessageHandlerReady(
+        waitMs: Long = 4000L,
+        statusReporter: ((String) -> Unit)? = null
+    ): DevToolMessageHandler? {
+        // Fast path: reuse existing handler to avoid repeated initialization churn.
+        ensureDevToolMessageHandler(statusReporter)?.let { return it }
+
+        runCatching {
+            // Ensure script process service is started (more reliable on some ROMs).
+            IndependentScriptService.startForeground(GlobalAppContext.get())
+            ScriptServiceConnection.GlobalConnection.bind(GlobalAppContext.get())
+        }
+        runCatching {
+            statusReporter?.invoke("等待脚本服务连接中…")
+            ScriptServiceConnection.GlobalConnection.awaitConnected()
+            statusReporter?.invoke("脚本服务已连接")
+        }.onFailure {
+            statusReporter?.invoke("脚本服务连接失败：${it.message ?: it.javaClass.simpleName}")
+        }
+
+        ensureDevToolMessageHandler(statusReporter)?.let { return it }
+        val start = System.currentTimeMillis()
+        while (System.currentTimeMillis() - start < waitMs) {
+            delay(200)
+            ensureDevToolMessageHandler(statusReporter)?.let { return it }
+        }
+        return null
     }
 
 
@@ -168,6 +247,7 @@ object DevPlugin {
         private var serverUrl: String? = null
     ) {
         private var lastPongId = -1L
+        private val sendMutex = Mutex()
         val isActive get() = session.isActive
 
         suspend fun init() {
@@ -251,10 +331,73 @@ object DevPlugin {
                         }
                     }
 
+                    "screen_capture",
+                    "get_color",
+                    "dump_node_tree",
+                    "find_nodes_by_text",
+                    "find_nodes_by_id",
+                    "highlight_node",
+                    "color_test" -> {
+                        // Run devtool command off the reader loop; keep pong processing responsive.
+                        CoroutineScope(Dispatchers.IO).launch {
+                            handleDevToolMessage(obj)
+                        }
+                    }
+
                     else -> responseHandler.handle(obj)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+            }
+        }
+
+        private suspend fun handleDevToolMessage(obj: JsonObject) {
+            withContext(Dispatchers.IO) {
+                devToolMutex.withLock {
+                    try {
+                        val commandType = obj["type"]?.asString.orEmpty()
+                        if (commandType.isNotEmpty() && shouldDebounceDevToolCommand(commandType)) {
+                            runCatching { log("[devtool] 忽略${DEV_TOOL_DEBOUNCE_MS}ms内重复指令: $commandType") }
+                            return@withLock
+                        }
+                        val reporter: (String) -> Unit = { step ->
+                            runCatching { log("[devtool] $step") }
+                        }
+                        val handler = ensureDevToolMessageHandlerReady(waitMs = 25000L, statusReporter = reporter)
+                        if (handler == null) {
+                            if (session.isActive) {
+                                sendSafely("""{"type":"error","data":{"message":"手机端服务拉起超时，请保持应用前台并重试截图"}}""")
+                            }
+                            return@withLock
+                        }
+                        handler.handleMessage(obj.toString())?.let { responseJson ->
+                            if (session.isActive) {
+                                if (commandType == "screen_capture") {
+                                    sendScreenCaptureResponsePossiblyChunked(responseJson)
+                                } else {
+                                    sendSafely(responseJson)
+                                }
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.e(TAG, "handleDevToolMessage failed", e)
+                        runCatching { GlobalAppContext.toast("调试指令处理失败：${e.message ?: "unknown"}") }
+                        val errorMessage = e.message ?: "unknown error"
+                        if (session.isActive) {
+                            sendSafely("""{"type":"error","data":{"message":"$errorMessage"}}""")
+                        }
+                    }
+                }
+                Unit
+            }
+        }
+
+        private suspend fun shouldDebounceDevToolCommand(type: String): Boolean {
+            val now = System.currentTimeMillis()
+            return devToolDebounceMutex.withLock {
+                val last = devToolLastCommandAt[type]
+                devToolLastCommandAt[type] = now
+                last != null && now - last < DEV_TOOL_DEBOUNCE_MS
             }
         }
 
@@ -274,7 +417,7 @@ object DevPlugin {
                     type = TYPE_PING,
                     data = System.currentTimeMillis()
                 )
-                session.send(Frame.Text(gson.toJson(ping)))
+                sendSafely(gson.toJson(ping))
                 delay(10000)
                 if (lastPongId != ping.data) {
                     Log.d(TAG, "ping: $lastPongId != ${ping.data}")
@@ -359,8 +502,100 @@ object DevPlugin {
                 data = LogData(log = log)
             )
             runBlocking {
-                session.send(gson.toJson(data))
+                sendSafely(gson.toJson(data))
             }
+        }
+
+        private suspend fun sendSafely(text: String) {
+            sendMutex.withLock {
+                if (session.isActive) {
+                    session.send(text)
+                }
+            }
+        }
+
+        /**
+         * Large PNG Base64 in one JSON frame can drop the VSCode side WebSocket; split into UTF-8 chunks.
+         */
+        private suspend fun sendScreenCaptureResponsePossiblyChunked(responseJson: String) {
+            val root = runCatching {
+                JsonParser.parseString(responseJson).takeIf { it.isJsonObject }?.asJsonObject
+            }.getOrNull()
+            if (root == null || root.get("type")?.asString != "screen_capture_result") {
+                sendSafely(responseJson)
+                return
+            }
+            val data = root.getAsJsonObject("data") ?: run {
+                sendSafely(responseJson)
+                return
+            }
+            val base64Prim = data.get("base64") ?: run {
+                sendSafely(responseJson)
+                return
+            }
+            if (!base64Prim.isJsonPrimitive || !base64Prim.asJsonPrimitive.isString) {
+                sendSafely(responseJson)
+                return
+            }
+            val b64 = base64Prim.asString
+            val utf8Len = responseJson.toByteArray(StandardCharsets.UTF_8).size
+            if (utf8Len <= SCREEN_CAPTURE_SINGLE_FRAME_UTF8_MAX &&
+                b64.length <= SCREEN_CAPTURE_SINGLE_FRAME_BASE64_MAX
+            ) {
+                sendSafely(responseJson)
+                return
+            }
+            val captureId = "${System.currentTimeMillis()}_${java.util.UUID.randomUUID()}"
+            val chunkChars = SCREEN_CAPTURE_CHUNK_CHARS
+            val ranges = ArrayList<Pair<Int, Int>>()
+            var offset = 0
+            while (offset < b64.length) {
+                val remaining = b64.length - offset
+                val take = if (remaining <= chunkChars) {
+                    remaining
+                } else {
+                    (chunkChars / 4) * 4
+                }
+                ranges.add(offset to offset + take)
+                offset += take
+            }
+            val beginData = JsonObject().apply {
+                addProperty("captureId", captureId)
+                addProperty("chunkTotal", ranges.size)
+                for ((k, v) in data.entrySet()) {
+                    if (k != "base64") add(k, v)
+                }
+            }
+            sendSafely(
+                JsonObject().apply {
+                    addProperty("type", "screen_capture_begin")
+                    add("data", beginData)
+                }.toString()
+            )
+            ranges.forEachIndexed { index, range ->
+                val chunkData = JsonObject().apply {
+                    addProperty("captureId", captureId)
+                    addProperty("index", index)
+                    addProperty("base64", b64.substring(range.first, range.second))
+                }
+                sendSafely(
+                    JsonObject().apply {
+                        addProperty("type", "screen_capture_chunk")
+                        add("data", chunkData)
+                    }.toString()
+                )
+            }
+            sendSafely(
+                JsonObject().apply {
+                    addProperty("type", "screen_capture_end")
+                    add(
+                        "data",
+                        JsonObject().apply {
+                            addProperty("captureId", captureId)
+                        }
+                    )
+                }.toString()
+            )
         }
 
         suspend fun close(

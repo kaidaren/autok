@@ -62,7 +62,7 @@ class ScreenCapturer(
     }
 
     private fun createImageReader(width: Int, height: Int): ImageReader {
-        return ImageReader.newInstance(width, height, PixelFormat.RGBA_8888, 3).apply {
+        return ImageReader.newInstance(width, height, PixelFormat.RGBA_8888, 5).apply {
             setOnImageAvailableListener({
                 try {
                     executor.submit {

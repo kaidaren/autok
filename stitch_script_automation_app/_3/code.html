@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Node Inspector - KINETIC_CONSOLE</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              obsidian: {
+                950: '#020617', // Deep Midnight
+                900: '#0f172a', // Obsidian Base
+                800: '#1e293b', // Elevated Surface
+                700: '#334155', // Border
+              }
+            },
+            borderRadius: {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            fontFamily: {
+                    "headline": ["Public Sans"],
+                    "body": ["Public Sans"],
+                    "label": ["Public Sans"],
+                    "mono": ["JetBrains Mono", "monospace"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-bg {
+            background: rgba(2, 6, 23, 0.9);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+        }
+        .glow-accent {
+            text-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-obsidian-950 font-body text-slate-300 min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
+<!-- Mock Background App Content (Blurred) -->
+<div class="absolute inset-0 z-0 overflow-hidden blur-md opacity-20">
+<div class="grid grid-cols-2 gap-4 p-4 h-full">
+<div class="bg-obsidian-800 rounded-xl h-48 border border-obsidian-700"></div>
+<div class="bg-obsidian-800 rounded-xl h-48 border border-obsidian-700"></div>
+<div class="bg-obsidian-800 rounded-xl h-64 col-span-2 border border-obsidian-700"></div>
+<div class="bg-obsidian-800 rounded-xl h-48 border border-obsidian-700"></div>
+<div class="bg-obsidian-800 rounded-xl h-48 border border-obsidian-700"></div>
+</div>
+</div>
+<!-- Floating Node Inspector Window -->
+<div class="z-10 w-full max-w-sm glass-bg rounded-xl border border-obsidian-700/50 flex flex-col">
+<!-- TopAppBar (Shared Component Implementation) -->
+<header class="flex items-center justify-between w-full px-4 py-3 bg-obsidian-950/80 rounded-t-xl border-b border-obsidian-700/50">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-500 active:scale-95 transition-transform cursor-grab text-lg" data-icon="drag_indicator">drag_indicator</span>
+<h1 class="font-mono text-[10px] tracking-widest text-emerald-500 font-bold uppercase glow-accent">Node Inspector</h1>
+</div>
+<div class="flex items-center">
+<button class="text-slate-500 hover:bg-slate-800 hover:text-emerald-400 p-1 rounded transition-colors">
+<span class="material-symbols-outlined text-[20px]" data-icon="close">close</span>
+</button>
+</div>
+</header>
+<!-- Inspector Content -->
+<main class="flex-1 overflow-y-auto max-h-[530px] font-mono text-[11px] leading-relaxed">
+<div class="divide-y divide-slate-800/30">
+<!-- Property Row -->
+<div class="flex py-2.5 px-4 hover:bg-emerald-500/5 transition-colors group">
+<div class="w-1/3 text-slate-500 shrink-0 group-hover:text-slate-400">packageName</div>
+<div class="w-2/3 text-slate-200 truncate">org.autojs.autojs6</div>
+</div>
+<!-- Property Row -->
+<div class="flex py-2.5 px-4 hover:bg-emerald-500/5 transition-colors group">
+<div class="w-1/3 text-slate-500 shrink-0 group-hover:text-slate-400">id</div>
+<div class="w-2/3 text-emerald-400 glow-accent">title</div>
+</div>
+<!-- Property Row -->
+<div class="flex py-2.5 px-4 hover:bg-emerald-500/5 transition-colors group">
+<div class="w-1/3 text-slate-500 shrink-0 group-hover:text-slate-400">fullId</div>
+<div class="w-2/3 text-slate-200 truncate">org.autojs.autojs6:id/title</div>
+</div>
+<!-- Property Row -->
+<div class="flex py-2.5 px-4 hover:bg-emerald-500/5 transition-colors group">
+<div class="w-1/3 text-slate-500 shrink-0 group-hover:text-slate-400">idHex</div>
+<div class="w-2/3 text-slate-200">0x7f090549</div>
+</div>
+<!-- Property Row -->
+<div class="flex py-2.5 px-4 hover:bg-emerald-500/5 transition-colors group">
+<div class="w-1/3 text-slate-500 shrink-0 group-hover:text-slate-400">desc</div>
+<div class="w-2/3 text-slate-600">(null)</div>
+</div>
+<!-- Property Row (Highlighted) -->
+<div class="flex py-2.5 px-4 bg-emerald-500/[0.07] border-l-2 border-emerald-500 shadow-inner">
+<div class="w-1/3 text-emerald-500/70 shrink-0">text</div>
+<div class="w-2/3 text-emerald-400 font-bold glow-accent">"文件夹 [ 1 ]"</div>
+</div>
+<!-- Property Row -->
+<div class="flex py-2.5 px-4 hover:bg-emerald-500/5 transition-colors group">
+<div class="w-1/3 text-slate-500 shrink-0 group-hover:text-slate-400">bounds</div>
+<div class="w-2/3 text-emerald-500/90">[ 64, 200, 504, 238 ]</div>
+</div>
+<!-- Property Row -->
+<div class="flex py-2.5 px-4 hover:bg-emerald-500/5 transition-colors group">
+<div class="w-1/3 text-slate-500 shrink-0 group-hover:text-slate-400">center</div>
+<div class="w-2/3 text-slate-200">[ 284, 219 ]</div>
+</div>
+<!-- Property Row -->
+<div class="flex py-2.5 px-4 hover:bg-emerald-500/5 transition-colors group">
+<div class="w-1/3 text-slate-500 shrink-0 group-hover:text-slate-400">className</div>
+<div class="w-2/3 text-slate-200 truncate">android.widget.TextView</div>
+</div>
+<!-- Property Row -->
+<div class="flex py-2.5 px-4 hover:bg-emerald-500/5 transition-colors group">
+<div class="w-1/3 text-slate-500 shrink-0 group-hover:text-slate-400">clickable</div>
+<div class="w-2/3 text-slate-500">false</div>
+</div>
+<!-- Property Row -->
+<div class="flex py-2.5 px-4 hover:bg-emerald-500/5 transition-colors group">
+<div class="w-1/3 text-slate-500 shrink-0 group-hover:text-slate-400">longClickable</div>
+<div class="w-2/3 text-slate-500">false</div>
+</div>
+<!-- Property Row -->
+<div class="flex py-2.5 px-4 hover:bg-emerald-500/5 transition-colors group">
+<div class="w-1/3 text-slate-500 shrink-0 group-hover:text-slate-400">scrollable</div>
+<div class="w-2/3 text-slate-500">false</div>
+</div>
+<!-- Property Row -->
+<div class="flex py-2.5 px-4 hover:bg-emerald-500/5 transition-colors group">
+<div class="w-1/3 text-slate-500 shrink-0 group-hover:text-slate-400">childCount</div>
+<div class="w-2/3 text-slate-200">0</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Shared Component Implementation) -->
+<nav class="flex justify-around items-center w-full py-3 px-4 bg-obsidian-950/90 rounded-b-xl border-t border-obsidian-700/50">
+<!-- Active Navigation Item -->
+<button class="flex items-center justify-center bg-emerald-500/10 text-emerald-400 rounded-lg p-2.5 active:scale-95 transition-all shadow-[0_0_15px_rgba(16,185,129,0.1)]">
+<span class="material-symbols-outlined text-[22px]" data-icon="code">code</span>
+</button>
+<button class="flex items-center justify-center text-slate-600 p-2.5 hover:text-emerald-400 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[22px]" data-icon="search">search</span>
+</button>
+<button class="flex items-center justify-center text-slate-600 p-2.5 hover:text-emerald-400 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[22px]" data-icon="settings">settings</span>
+</button>
+</nav>
+</div>
+<!-- Floating Badge for Aesthetic Detail -->
+<div class="absolute bottom-6 right-6 flex flex-col items-end gap-1.5 opacity-60">
+<div class="text-[9px] font-mono text-emerald-500/60 uppercase tracking-[0.2em] font-bold">System Status</div>
+<div class="flex items-center gap-2 px-2 py-1 bg-obsidian-900 border border-obsidian-700/50 rounded-full">
+<div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div>
+<div class="text-[9px] font-mono text-slate-400 font-bold">DEBUG: ACTIVE</div>
+</div>
+</div>
+</body></html>

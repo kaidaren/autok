@@ -9,7 +9,7 @@ import android.media.projection.MediaProjection
 import android.media.projection.MediaProjectionManager
 import android.os.IBinder
 import androidx.activity.result.contract.ActivityResultContract
-import com.github.aiselp.autox.activity.TransparentActivity
+import com.stardust.autojs.util.ProcessUtils
 import kotlinx.coroutines.CompletableDeferred
 import java.util.concurrent.CancellationException
 
@@ -26,13 +26,17 @@ class ScreenCaptureManager : ScreenCaptureRequester {
 
         val result = run {
             val result = CompletableDeferred<Intent>()
-            TransparentActivity.requestNewActivity(context) { activity ->
-                activity.registerForActivityResult(ScreenCaptureRequester()) { data ->
-                    activity.finish()
-                    if (data != null) {
-                        result.complete(data)
-                    } else result.completeExceptionally(CancellationException("data is null"))
-                }.launch(activity)
+            val callback: (Intent?) -> Unit = { data ->
+                if (data != null) {
+                    result.complete(data)
+                } else {
+                    result.completeExceptionally(CancellationException("data is null"))
+                }
+            }
+            if (ProcessUtils.isScriptProcess(context)) {
+                ScreenCapturePermissionActivityScript.request(context, callback)
+            } else {
+                ScreenCapturePermissionActivity.request(context, callback)
             }
             result.await()
         }

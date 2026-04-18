@@ -11,6 +11,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -52,6 +53,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.edit
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -103,24 +105,28 @@ private const val FEEDBACK_ADDRESS = "https://github.com/aiselp/AutoX/issues"
 
 @Composable
 fun DrawerPage() {
-    ModalDrawerSheet(Modifier.width(300.dp)) {
-        Column(Modifier.fillMaxSize()) {
-            val textStyle = MaterialTheme.typography.titleMedium
+    ModalDrawerSheet(
+        modifier = Modifier
+            .width(300.dp)
+            .background(Color(0xFF050A14))
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFF050A14)) // obsidian-900
+        ) {
             Column(
                 Modifier
                     .weight(1f)
                     .verticalScroll(rememberScrollState())
                     .padding(8.dp)
             ) {
-                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                    Image(
-                        painter = rememberAsyncImagePainter(R.drawable.autojs_logo1),
-                        contentDescription = null,
-                        modifier = Modifier.size(120.dp),
-                    )
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(text = stringResource(R.string.text_service), style = textStyle)
+                Text(
+                    text = stringResource(R.string.text_service),
+                    color = Color(0x33FFFFFF),
+                    fontSize = 10.sp,
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                )
                 AccessibilityServiceSwitch()
                 StableModeSwitch()
                 NotificationUsageRightSwitch()
@@ -129,12 +135,22 @@ fun DrawerPage() {
                 ShizukuPermissionSwitch()
                 PublishNotificationSwitch()
 
-                Text(text = stringResource(id = R.string.text_script_record), style = textStyle)
+                Text(
+                    text = stringResource(id = R.string.text_script_record),
+                    color = Color(0x33FFFFFF),
+                    fontSize = 10.sp,
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                )
                 FloatingWindowSwitch()
                 VolumeDownControlSwitch()
                 AutoBackupSwitch()
 
-                Text(text = stringResource(id = R.string.text_others), style = textStyle)
+                Text(
+                    text = stringResource(id = R.string.text_others),
+                    color = Color(0x33FFFFFF),
+                    fontSize = 10.sp,
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                )
                 ConnectComputerSwitch()
                 USBDebugSwitch()
 
@@ -400,9 +416,14 @@ private fun FloatingWindowSwitch() {
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
         onResult = {
+            FloatyWindowManger.hideCircularMenu()
             if (FloatyWindowManger.showCircularMenu()) {
                 isFloatingWindowShowing = true
-            } else isFloatingWindowShowing = false
+                Pref.setFloatingMenuShown(true)
+            } else {
+                isFloatingWindowShowing = false
+                Pref.setFloatingMenuShown(false)
+            }
         }
     )
     SettingOptionSwitch(
@@ -417,6 +438,7 @@ private fun FloatingWindowSwitch() {
                 isFloatingWindowShowing = false
                 Pref.setFloatingMenuShown(false)
             } else {
+                FloatyWindowManger.hideCircularMenu()
                 if (FloatyWindowManger.showCircularMenu()) {
                     isFloatingWindowShowing = true
                     Pref.setFloatingMenuShown(true)
@@ -762,17 +784,15 @@ private fun BottomButtons() {
         TextButton(
             modifier = Modifier.weight(1f),
             onClick = {
-                context.startActivity(
-                    Intent(
-                        context,
-                        SettingsActivity::class.java
-                    )
-                )
+                (context as? Activity)?.recreate()
             },
         ) {
-            Icon(imageVector = Icons.Default.Settings, contentDescription = null)
+            Icon(
+                imageVector = Icons.Default.Settings,
+                contentDescription = null
+            )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(text = stringResource(id = R.string.text_setting))
+            Text(text = stringResource(id = R.string.text_restart))
         }
         TextButton(
             modifier = Modifier.weight(1f),

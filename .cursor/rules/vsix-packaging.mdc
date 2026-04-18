@@ -1,0 +1,58 @@
+---
+description: Package AutoX/Auto.js VSCode extension into .vsix (install-dir workflow)
+alwaysApply: true
+---
+
+# VSIX 打包规则（不要再反复问）
+
+当用户说“打包/出新版本/重新打包 vsix”时，默认按**已安装扩展目录**工作流执行（除非用户明确提供源码仓库路径并要求重新编译）。
+
+## 默认扩展目录（本项目强制）
+
+默认且优先使用：
+
+- `E:\deep\autox\AutoX_aiselp\AutoX.js-VSCode-Extension\`
+
+除非用户显式要求其他目录，否则禁止切换到 VSCode 安装目录打包。
+
+如果用户指出了其他目录，则改用用户给的目录。
+
+## 打包目标
+
+- 生成新的 `.vsix` 到**同一个目录**内（和 `package.json` 同级）
+- 版本号递增（例如 `1.110.5` → `1.110.6`）
+
+## 标准流程（install-dir 打包，不重新编译）
+
+1. **检查入口产物是否存在**
+   - 必须存在：`out/extension.js`（或 `out/extension` 对应入口）
+   - 如果 `out/` 不存在：先从目录内最近的 `.vsix` 解压恢复 `extension/out → out/`，再继续。
+
+2. **更新版本号**
+   - 编辑该目录的 `package.json`：只改 `"version": "x.y.z"`。
+
+3. **确保 prepublish 不触发 tsc（因为 install-dir 可能没有 src/tsconfig）**
+   - `package.json` 中应保持：
+     - `"vscode:prepublish": "node -e \"process.exit(0)\""`
+
+4. **打包命令（Windows）**
+   - 在扩展目录执行：
+     - `npx --yes @vscode/vsce package`
+
+## 常见失败与处理
+
+- **报依赖 missing（npm ELSPROBLEMS）**
+  - 先不要盲目 `npm install`（可能导致 `out/` 丢失）。
+  - 如果必须补依赖：先备份 `out/`，再 `npm install`，再确认 `out/` 还在。
+
+- **报 entrypoint missing（找不到 out/extension）**
+  - 从同目录旧 `.vsix` 解压恢复 `out/` 后再打包。
+
+## 用户想“重新编译 vsix”的判定
+
+只有当目录同时存在 `tsconfig.json` + `src/`，并且用户明确要求“重新编译”时，才执行：
+
+- `npm install`
+- `npm run compile`
+- `npx --yes @vscode/vsce package`
+

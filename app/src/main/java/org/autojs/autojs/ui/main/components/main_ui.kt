@@ -1,6 +1,5 @@
 package org.autojs.autojs.ui.main.components
 
-import android.webkit.WebView
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -27,14 +26,13 @@ import androidx.compose.ui.unit.dp
 import com.stardust.toast
 import kotlinx.coroutines.launch
 import org.autojs.autojs.ui.main.web.EditorAppManager
-import org.autojs.autojs.ui.main.web.EditorAppManager.Companion.loadHomeDocument
 import org.autojs.autojs.ui.main.web.EditorAppManager.Companion.openDocument
 import org.autojs.autoxjs.R
 
 
 //文档界面菜单按钮
 @Composable
-fun DocumentPageMenuButton(getWebView: () -> WebView) {
+fun DocumentPageMenuButton() {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     Box {
@@ -60,7 +58,7 @@ fun DocumentPageMenuButton(getWebView: () -> WebView) {
                 },
                 onClick = {
                     dismissMenu()
-                    loadHomeDocument(getWebView())
+                    toast(context, "文档页已升级为离线文档中心")
                 }
             )
             DropdownMenuItem(
@@ -87,8 +85,7 @@ fun DocumentPageMenuButton(getWebView: () -> WebView) {
                 },
                 onClick = {
                     dismissMenu()
-                    getWebView().clearCache(false)
-                    getWebView().reload()
+                    toast(context, "文档页已升级为离线文档中心")
                 })
             DropdownMenuItem(
                 text = { Text(text = "设为首页") },
@@ -102,8 +99,7 @@ fun DocumentPageMenuButton(getWebView: () -> WebView) {
                 onClick = {
                     dismissMenu()
                     scope.launch {
-                        EditorAppManager.saveCurrentPage(getWebView())
-                        toast(context, "已设置当前页面为首页")
+                        toast(context, "文档页已升级为离线文档中心")
                     }
                 })
         }

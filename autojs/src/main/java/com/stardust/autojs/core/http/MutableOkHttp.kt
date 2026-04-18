@@ -4,6 +4,8 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.OkHttpClient.Builder
 import okhttp3.Response
+import java.io.IOException
+import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.util.concurrent.TimeUnit
 
@@ -30,12 +32,24 @@ open class MutableOkHttp() {
                 if (i >= this.maxRetries) {
                     throw e
                 }
+            } catch (e: SocketException) {
+                // Common transient error: "Connection reset by peer"
+                if (i >= this.maxRetries) {
+                    throw e
+                }
+            } catch (e: IOException) {
+                // Other network IO interruptions should also retry.
+                if (i >= this.maxRetries) {
+                    throw e
+                }
             }
         }
         return@Interceptor response!!
     }
     private var mOkHttpClient: OkHttpClient = newClient(
-        Builder().addInterceptor(mRetryInterceptor)
+        Builder()
+            .retryOnConnectionFailure(true)
+            .addInterceptor(mRetryInterceptor)
     )
 
     fun client(): OkHttpClient {

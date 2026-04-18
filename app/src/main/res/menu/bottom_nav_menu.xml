@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/screenOneFragment"
+        android:icon="@drawable/ic_accessibility"
+        android:title="@string/screen_one_title" />
+
+    <item
+        android:id="@+id/screenTwoFragment"
+        android:icon="@drawable/ic_performance"
+        android:title="@string/screen_two_title" />
+
+    <item
+        android:id="@+id/screenThreeFragment"
+        android:icon="@drawable/ic_hierarchy"
+        android:title="@string/screen_three_title" />
+
+    <item
+        android:id="@+id/screenFourFragment"
+        android:icon="@drawable/ic_automation"
+        android:title="@string/screen_four_title" />
+
+    <item
+        android:id="@+id/screenFiveFragment"
+        android:icon="@drawable/ic_script"
+        android:title="@string/screen_five_title" />
+
+    <item
+        android:id="@+id/screenSixFragment"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/screen_six_title" />
+
+</menu>

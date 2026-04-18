@@ -157,7 +157,7 @@ class ScriptServiceConnection : ServiceConnection {
         send()
     }
 
-    suspend fun awaitConnected() = withTimeout(3000) {
+    suspend fun awaitConnected() = withTimeout(15000) {
         if (isConnected) return@withTimeout
         if (binding == null) {
             if (application != null) {

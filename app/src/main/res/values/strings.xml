@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Required Permissions & Strings - Default English values -->
+    <!-- Main translations are provided by res-i18n folder -->
+    <string name="text_required_background_start">Requires background popup interface permission</string>
+    <string name="text_restart">Restart</string>
+</resources>

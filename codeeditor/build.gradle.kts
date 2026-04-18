@@ -1,3 +1,5 @@
+import java.net.URI
+
 plugins {
     id("com.android.library")
     id("kotlin-android")
@@ -55,24 +57,37 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
 }
 
-tasks.register("downloadEditor") {
-    val tag = "v0.4.0"
-    val uri = "https://github.com/aiselp/vscode-mobile/releases/download/${tag}/dist.zip"
-    val assetsDir = File(projectDir, "/src/main/assets/codeeditor")
-    val versionFile = File(assetsDir, "version.txt")
-    doFirst {
-        logger.log(LogLevel.LIFECYCLE, "start downloadEditor")
-        assetsDir.mkdirs()
-        if (versionFile.isFile && versionFile.readText() == tag) {
-            logger.log(LogLevel.LIFECYCLE, "skip download")
-            return@doFirst
+abstract class DownloadEditorTask : DefaultTask() {
+    @get:Input
+    abstract val tag: Property<String>
+
+    @get:OutputDirectory
+    abstract val assetsDir: DirectoryProperty
+
+    @TaskAction
+    fun download() {
+        val tagValue = tag.get()
+        val dir = assetsDir.get().asFile
+        val versionFile = File(dir, "version.txt")
+        dir.mkdirs()
+        if (versionFile.isFile && versionFile.readText() == tagValue) {
+            logger.lifecycle("downloadEditor: already up to date, skipping")
+            return
         }
-        download.run {
-            src(uri)
-            dest(File(assetsDir, "dist.zip"))
+        val url = URI("https://github.com/aiselp/vscode-mobile/releases/download/$tagValue/dist.zip").toURL()
+        val destFile = File(dir, "dist.zip")
+        logger.lifecycle("downloadEditor: downloading $url")
+        url.openStream().use { input ->
+            destFile.outputStream().use { output -> input.copyTo(output) }
         }
-        versionFile.writeText(tag)
+        versionFile.writeText(tagValue)
+        logger.lifecycle("downloadEditor: complete")
     }
+}
+
+tasks.register<DownloadEditorTask>("downloadEditor") {
+    tag.set("v0.4.0")
+    assetsDir.set(layout.projectDirectory.dir("src/main/assets/codeeditor"))
 }
 tasks.findByName("preBuild")?.dependsOn("downloadEditor")
 tasks.findByName("preDebugBuild")?.dependsOn("downloadEditor")

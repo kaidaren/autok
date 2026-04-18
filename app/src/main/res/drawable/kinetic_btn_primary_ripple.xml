@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Kinetic Ripple Effect for Primary Buttons -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/kinetic_primary_fixed"
+    android:radius="@dimen/kinetic_radius_xl">
+    <item android:drawable="@drawable/kinetic_btn_primary" />
+</ripple>

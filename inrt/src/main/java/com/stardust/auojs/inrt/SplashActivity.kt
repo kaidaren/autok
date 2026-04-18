@@ -9,7 +9,6 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,7 +17,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
@@ -26,7 +24,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -100,22 +97,18 @@ class SplashActivity : AppCompatActivity() {
                             .fillMaxWidth()
                             .weight(1f),
                         contentAlignment = Alignment.Center
-                    ) {
-                        Image(
-                            modifier = Modifier.size(120.dp),
-                            painter = painterResource(R.drawable.autojs_logo),
-                            contentDescription = null
-                        )
-                    }
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                        Text(
-                            slug,
-                            fontSize = 14.sp,
-                            fontFamily = FontFamily(
-                                Typeface.createFromAsset(assets, "roboto_medium.ttf")
-                            ),
-                            modifier = Modifier.padding(vertical = 12.dp)
-                        )
+                    ) {}
+                    if (slug.isNotBlank()) {
+                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                            Text(
+                                slug,
+                                fontSize = 14.sp,
+                                fontFamily = FontFamily(
+                                    Typeface.createFromAsset(assets, "roboto_medium.ttf")
+                                ),
+                                modifier = Modifier.padding(vertical = 12.dp)
+                            )
+                        }
                     }
                 }
             }

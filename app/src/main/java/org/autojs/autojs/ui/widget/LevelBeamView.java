@@ -17,14 +17,7 @@ public class LevelBeamView extends View {
 
     private static final String TAG = "LevelBeamView";
 
-    private static final int[] colors = {
-            0xff1abc9c,
-            0xff3498db,
-            0xffe67e22,
-            0xff8e44ad,
-            0xfff1c40f,
-            0xff2ecc71,
-    };
+    private static final int TREE_LINE_COLOR = 0x3310B981;
 
     private int mLevel;
 
@@ -83,13 +76,9 @@ public class LevelBeamView extends View {
             if (lvl >= 1) {
                 LINE_X += lvl * mLinesOffset;
             }
-            mLinePaint.setColor(getColorForLevel(lvl));
+            mLinePaint.setColor(TREE_LINE_COLOR);
             canvas.drawLine(LINE_X, 0, LINE_X, canvas.getHeight(), mLinePaint);
         }
-    }
-
-    private int getColorForLevel(int level) {
-        return colors[level % colors.length];
     }
 
 }

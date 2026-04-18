@@ -11,4 +11,59 @@
     <dimen name="divider_drawer_menu_group">6dp</dimen>
     <dimen name="padding_circular_menu_recording">8dp</dimen>
     <dimen name="padding_circular_menu_normal">5dp</dimen>
+    
+    <!-- ============================================================ -->
+    <!-- KINETIC DESIGN SYSTEM - Spacing & Dimensions -->
+    <!-- ============================================================ -->
+    
+    <!-- Spacing Scale - 8dp Baseline -->
+    <dimen name="kinetic_spacing_xs">4dp</dimen>
+    <dimen name="kinetic_spacing_sm">8dp</dimen>
+    <dimen name="kinetic_spacing_md">16dp</dimen>
+    <dimen name="kinetic_spacing_lg">24dp</dimen>
+    <dimen name="kinetic_spacing_xl">32dp</dimen>
+    <dimen name="kinetic_spacing_xxl">48dp</dimen>
+    <dimen name="kinetic_spacing_xxxl">64dp</dimen>
+    
+    <!-- Typography Sizes -->
+    <dimen name="kinetic_text_display_large">57sp</dimen>
+    <dimen name="kinetic_text_display_medium">45sp</dimen>
+    <dimen name="kinetic_text_headline_large">32sp</dimen>
+    <dimen name="kinetic_text_headline_medium">28sp</dimen>
+    <dimen name="kinetic_text_headline_small">24sp</dimen>
+    <dimen name="kinetic_text_title_large">22sp</dimen>
+    <dimen name="kinetic_text_title_medium">16sp</dimen>
+    <dimen name="kinetic_text_title_md">16sp</dimen>
+    <dimen name="kinetic_text_body_large">16sp</dimen>
+    <dimen name="kinetic_text_body_medium">14sp</dimen>
+    <dimen name="kinetic_text_body_md">14sp</dimen>
+    <dimen name="kinetic_text_body_small">12sp</dimen>
+    <dimen name="kinetic_text_label_large">14sp</dimen>
+    <dimen name="kinetic_text_label_medium">12sp</dimen>
+    <dimen name="kinetic_text_label_sm">12sp</dimen>
+    
+    <!-- Border Radius -->
+    <dimen name="kinetic_radius_none">0dp</dimen>
+    <dimen name="kinetic_radius_xs">2dp</dimen>
+    <dimen name="kinetic_radius_sm">4dp</dimen>
+    <dimen name="kinetic_radius_md">8dp</dimen>
+    <dimen name="kinetic_radius_lg">12dp</dimen>
+    <dimen name="kinetic_radius_xl">12dp</dimen>
+    <dimen name="kinetic_radius_full">9999dp</dimen>
+    
+    <!-- Component Heights -->
+    <dimen name="kinetic_button_height">48dp</dimen>
+    <dimen name="kinetic_input_height">56dp</dimen>
+    <dimen name="kinetic_toolbar_height">56dp</dimen>
+    <dimen name="kinetic_chip_height">32dp</dimen>
+    
+    <!-- Icon Sizes -->
+    <dimen name="kinetic_icon_small">16dp</dimen>
+    <dimen name="kinetic_icon_medium">24dp</dimen>
+    <dimen name="kinetic_icon_large">32dp</dimen>
+    
+    <!-- Stroke & Border Widths -->
+    <dimen name="kinetic_stroke_thin">0.5dp</dimen>
+    <dimen name="kinetic_stroke_medium">1dp</dimen>
+    <dimen name="kinetic_stroke_thick">2dp</dimen>
 </resources>

@@ -24,6 +24,7 @@ import java.io.File
 import java.io.FileFilter
 import com.aiselp.autojs.codeeditor.EditActivity as EditActivity2
 import org.autojs.autojs.ui.edit.EditActivity as EditActivity1
+import org.autojs.autojs.ui.kinetic.editor.KineticEditorActivity
 
 /**
  * Created by Stardust on 2017/5/3.
@@ -88,7 +89,8 @@ object Scripts {
 
     fun edit(context: Context, file: ScriptFile) {
         if (Pref.getEditor()) {
-            EditActivity2.editFile(context, file)
+            // Use the Kinetic-designed editor UI for the new editor experience.
+            KineticEditorActivity.open(context, file.path, file.simplifiedName)
         } else {
             EditActivity1.editFile(context, file.simplifiedName, file.path, false)
         }

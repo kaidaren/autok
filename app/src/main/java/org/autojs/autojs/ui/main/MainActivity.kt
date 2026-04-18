@@ -26,12 +26,14 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.viewpager2.widget.ViewPager2
 import com.aiselp.autox.ui.material3.BottomBar
@@ -82,10 +84,15 @@ class MainActivity : AppCompatActivity() {
             IndependentScriptService.stopForeground(this)
         }
 
+        // Always cleanup first, then recreate if user enabled it.
+        FloatyWindowManger.hideCircularMenu()
         if (Pref.isFloatingMenuShown()) {
-            if (!FloatyWindowManger.showCircularMenu()) Pref.setFloatingMenuShown(false)
-        } else {
-            FloatyWindowManger.hideCircularMenu()
+            lifecycleScope.launch {
+                delay(250)
+                if (!FloatyWindowManger.showCircularMenu()) {
+                    Pref.setFloatingMenuShown(false)
+                }
+            }
         }
 
         setContent {
@@ -161,12 +168,14 @@ fun MainPage(
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
+        containerColor = Color(0xFF020408),
         topBar = {
             MainTopAppBar(
-                openMenuRequest = { scope.launch { drawerState.open() } }
+                openMenuRequest = { scope.launch { drawerState.open() } },
+                showCreateEntry = currentPage == 0
             ) {
                 if (currentPage == 2)
-                    DocumentPageMenuButton { webViewFragment.webView }
+                    DocumentPageMenuButton()
             }
         },
         bottomBar = {

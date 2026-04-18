@@ -102,6 +102,9 @@ public class ImageWrapper {
     public Mat getMat() {
         ensureNotRecycled();
         if (mMat == null && mBitmap != null) {
+            // OpenCV cannot lock pixels from HARDWARE bitmaps on Android.
+            // Force a software ARGB_8888 bitmap before conversion.
+            mBitmap = ensureSoftwareBitmap(mBitmap);
             mMat = new Mat();
             Utils.bitmapToMat(mBitmap, mMat, true);
         }
@@ -160,9 +163,32 @@ public class ImageWrapper {
         if (mBitmap == null) {
             return ImageWrapper.ofMat(mMat.clone());
         }
+        Bitmap.Config config = safeBitmapConfig(mBitmap);
         if (mMat == null) {
-            return ImageWrapper.ofBitmap(mBitmap.copy(mBitmap.getConfig(), true));
+            return ImageWrapper.ofBitmap(mBitmap.copy(config, true));
         }
-        return new ImageWrapper(mBitmap.copy(mBitmap.getConfig(), true), mMat.clone());
+        return new ImageWrapper(mBitmap.copy(config, true), mMat.clone());
+    }
+
+    private static Bitmap ensureSoftwareBitmap(Bitmap bitmap) {
+        if (bitmap == null) {
+            return null;
+        }
+        Bitmap.Config config = bitmap.getConfig();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && config == Bitmap.Config.HARDWARE) {
+            return bitmap.copy(Bitmap.Config.ARGB_8888, false);
+        }
+        if (config == null) {
+            return bitmap.copy(Bitmap.Config.ARGB_8888, false);
+        }
+        return bitmap;
+    }
+
+    private static Bitmap.Config safeBitmapConfig(Bitmap bitmap) {
+        Bitmap.Config config = bitmap.getConfig();
+        if (config == null || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && config == Bitmap.Config.HARDWARE)) {
+            return Bitmap.Config.ARGB_8888;
+        }
+        return config;
     }
 }

@@ -56,13 +56,14 @@ fun FileInfo(modifier: Modifier = Modifier, name: String, desc: String) {
         Text(
             text = name,
             modifier = Modifier.fillMaxWidth(),
+            color = Color(0xFFF1F3FC),
             maxLines = 1,
             fontSize = 14.sp
         )
         Text(
             text = desc,
             modifier = Modifier.fillMaxWidth(),
-            color = MaterialTheme.colorScheme.secondary,
+            color = Color(0xFFA8ABB3),
             maxLines = 1,
             fontSize = 11.sp
         )

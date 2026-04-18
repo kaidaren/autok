@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/kinetic_glass_light" />
+    <corners android:radius="@dimen/kinetic_radius_md" />
+    <stroke
+        android:width="@dimen/kinetic_stroke_thin"
+        android:color="@color/kinetic_outline_variant" />
+</shape>

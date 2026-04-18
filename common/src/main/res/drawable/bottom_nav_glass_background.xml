@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background layer -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/kinetic_glass_light" />
+        </shape>
+    </item>
+    <!-- Border layer -->
+    <item>
+        <shape android:shape="rectangle">
+            <stroke
+                android:width="@dimen/kinetic_stroke_thin"
+                android:color="@color/kinetic_outline_variant" />
+        </shape>
+    </item>
+</layer-list>

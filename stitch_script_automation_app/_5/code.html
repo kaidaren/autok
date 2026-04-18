@@ -1,0 +1,256 @@
+<!DOCTYPE html><html class="dark" lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Public+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        obsidian: {
+                            950: '#020408',
+                            900: '#050a14',
+                            800: '#0d111a',
+                            700: '#1a1f29',
+                        },
+                        kinetic: {
+                            DEFAULT: '#9cff93',
+                            glow: 'rgba(156, 255, 147, 0.4)',
+                        }
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk", "Public Sans", "sans-serif"],
+                        "body": ["Public Sans", "sans-serif"],
+                        "label": ["Space Grotesk", "Public Sans", "sans-serif"],
+                        "space-grotesk": ["Space Grotesk", "sans-serif"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body {
+            background-color: #020408;
+            color: #e2e8f0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .tech-border {
+            border: 1px solid rgba(156, 255, 147, 0.1);
+            position: relative;
+        }
+        .tech-border::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            width: 8px;
+            height: 8px;
+            border-top: 2px solid #9cff93;
+            border-left: 2px solid #9cff93;
+        }
+        .tech-card {
+            background: linear-gradient(145deg, #0d111a 0%, #050a14 100%);
+        }
+        .drawer-shadow {
+            box-shadow: 25px 0 60px rgba(0, 0, 0, 0.8);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 2px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(156, 255, 147, 0.15);
+        }
+        .active-glow {
+            box-shadow: 0 0 12px rgba(156, 255, 147, 0.3);
+        }
+    </style>
+</head>
+<body class="font-body antialiased overflow-hidden h-screen w-screen">
+<!-- Overlay Background -->
+<div class="fixed inset-0 bg-black/80 backdrop-blur-md z-40 transition-opacity duration-300"></div>
+<!-- Sidebar Drawer -->
+<aside class="fixed top-0 left-0 h-full w-[85%] max-w-[320px] bg-obsidian-900 z-50 flex flex-col border-r border-white/5 drawer-shadow">
+<!-- Top Section: User Profile -->
+<section class="p-6 border-b border-white/5">
+<div class="flex items-center gap-4">
+<div class="relative">
+<div class="w-12 h-12 rounded-lg bg-obsidian-800 border border-kinetic/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-kinetic text-2xl opacity-90" data-icon="account_circle" style="">account_circle</span>
+</div>
+<div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-kinetic rounded-full border-2 border-obsidian-900 active-glow"></div>
+</div>
+<div>
+<h3 class="font-space-grotesk font-bold text-white tracking-tight" style="">用户</h3>
+<div class="flex items-center gap-1.5">
+<span class="text-[10px] text-kinetic font-space-grotesk uppercase tracking-wider font-bold" style="">System Active</span>
+</div>
+</div>
+</div>
+<div class="mt-6 flex items-center gap-3">
+<span class="material-symbols-outlined text-white/40 text-sm" data-icon="terminal" style="">terminal</span>
+<span class="font-space-grotesk text-sm font-bold tracking-tighter text-white/60 uppercase" style=""><br></span>
+</div>
+</section>
+<!-- Middle Section: Navigation Items (Scrollable) -->
+<nav class="flex-1 overflow-y-auto py-6 px-4 space-y-6 custom-scrollbar">
+<!-- Services Section -->
+<div class="space-y-2">
+<p class="px-2 text-[10px] font-space-grotesk font-bold text-white/20 uppercase tracking-[0.2em]" style="">服务 (Services)</p>
+<div class="space-y-1">
+<a class="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors group" href="#" style="">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-white/40 group-hover:text-kinetic transition-colors text-xl" data-icon="accessibility_new" style="">accessibility_new</span>
+<span class="text-sm font-medium text-white/70 group-hover:text-white transition-colors" style="">无障碍服务</span>
+</div>
+<div class="w-10 h-5 bg-kinetic/10 rounded-full relative border border-kinetic/30 transition-colors">
+<div class="absolute right-1 top-1 w-3 h-3 bg-kinetic rounded-full active-glow"></div>
+</div>
+</a>
+<a class="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors group" href="#" style="">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-white/40 group-hover:text-kinetic transition-colors text-xl" data-icon="settings_input_component" style="">settings_input_component</span>
+<span class="text-sm font-medium text-white/70 group-hover:text-white transition-colors" style="">前台服务</span>
+</div>
+<div class="w-10 h-5 bg-white/5 rounded-full relative border border-white/10 transition-colors">
+<div class="absolute left-1 top-1 w-3 h-3 bg-white/20 rounded-full"></div>
+</div>
+</a>
+</div>
+</div>
+<!-- Tools Section -->
+<div class="space-y-2">
+<p class="px-2 text-[10px] font-space-grotesk font-bold text-white/20 uppercase tracking-[0.2em]" style="">工具 (Tools)</p>
+<div class="space-y-1">
+<a class="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors group" href="#" style="">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-white/40 group-hover:text-kinetic transition-colors text-xl" data-icon="smart_button" style="">smart_button</span>
+<span class="text-sm font-medium text-white/70 group-hover:text-white transition-colors" style="">浮动按钮</span>
+</div>
+<div class="w-10 h-5 bg-white/5 rounded-full relative border border-white/10 transition-colors">
+<div class="absolute left-1 top-1 w-3 h-3 bg-white/20 rounded-full"></div>
+</div>
+</a>
+<a class="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors group" href="#" style="">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-white/40 group-hover:text-kinetic transition-colors text-xl" data-icon="ads_click" style="">ads_click</span>
+<span class="text-sm font-medium text-white/70 group-hover:text-white transition-colors" style="">指针位置</span>
+</div>
+<div class="w-10 h-5 bg-white/5 rounded-full relative border border-white/10 transition-colors">
+<div class="absolute left-1 top-1 w-3 h-3 bg-white/20 rounded-full"></div>
+</div>
+</a>
+</div>
+</div>
+<!-- Connectivity Section -->
+<div class="space-y-2">
+<p class="px-2 text-[10px] font-space-grotesk font-bold text-white/20 uppercase tracking-[0.2em]" style="">连接到计算机 (Connectivity)</p>
+<div class="space-y-1">
+<a class="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors group" href="#" style="">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-white/40 group-hover:text-kinetic transition-colors text-xl" data-icon="laptop_chromebook" style="">laptop_chromebook</span>
+<span class="text-sm font-medium text-white/70 group-hover:text-white transition-colors" style="">客户端模式</span>
+</div>
+<div class="w-10 h-5 bg-white/5 rounded-full relative border border-white/10 transition-colors">
+<div class="absolute left-1 top-1 w-3 h-3 bg-white/20 rounded-full"></div>
+</div>
+</a>
+<a class="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors group" href="#" style="">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-white/40 group-hover:text-kinetic transition-colors text-xl" data-icon="dns" style="">dns</span>
+<span class="text-sm font-medium text-white/70 group-hover:text-white transition-colors" style="">服务端模式</span>
+</div>
+<div class="w-10 h-5 bg-white/5 rounded-full relative border border-white/10 transition-colors">
+<div class="absolute left-1 top-1 w-3 h-3 bg-white/20 rounded-full"></div>
+</div>
+</a>
+</div>
+</div>
+<!-- Permissions Section -->
+<div class="space-y-2">
+<p class="px-2 text-[10px] font-space-grotesk font-bold text-white/20 uppercase tracking-[0.2em]" style="">权限 (Permissions)</p>
+<div class="space-y-1 pb-4">
+<a class="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors group" href="#" style="">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-white/40 group-hover:text-kinetic transition-colors text-xl" data-icon="notifications" style="">notifications</span>
+<span class="text-sm font-medium text-white/70 group-hover:text-white transition-colors" style="">发布通知权限</span>
+</div>
+<div class="w-10 h-5 bg-kinetic/10 rounded-full relative border border-kinetic/30 transition-colors">
+<div class="absolute right-1 top-1 w-3 h-3 bg-kinetic rounded-full active-glow"></div>
+</div>
+</a>
+<a class="flex items-center justify-between p-3 rounded-lg hover:bg-white/5 transition-colors group" href="#" style="">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-white/40 group-hover:text-kinetic transition-colors text-xl" data-icon="visibility" style="">visibility</span>
+<span class="text-sm font-medium text-white/70 group-hover:text-white transition-colors" style="">通知读取权限</span>
+</div>
+<div class="w-10 h-5 bg-kinetic/10 rounded-full relative border border-kinetic/30 transition-colors">
+<div class="absolute right-1 top-1 w-3 h-3 bg-kinetic rounded-full active-glow"></div>
+</div>
+</a>
+</div>
+</div>
+</nav>
+<!-- Bottom Action Bar -->
+<section class="border-t border-white/5 bg-obsidian-950">
+<!-- Active Status Indicator -->
+<div class="flex items-center justify-between px-6 py-3 border-b border-white/5">
+<span class="text-[10px] font-space-grotesk font-bold text-white/30 uppercase tracking-widest" style="">Active Status</span>
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-kinetic" style="">任务</span>
+<div class="w-1.5 h-1.5 bg-kinetic rounded-full animate-pulse active-glow"></div>
+</div>
+</div>
+<!-- Bottom Navigation Bar -->
+<div class="grid grid-cols-4 py-3 px-2">
+<button class="flex flex-col items-center gap-1 group" style="">
+<span class="material-symbols-outlined text-white/30 group-hover:text-kinetic transition-colors text-xl" data-icon="settings" style="">settings</span>
+<span class="text-[10px] text-white/30 group-hover:text-white transition-colors" style="">设置</span>
+</button>
+<button class="flex flex-col items-center gap-1 group" style="">
+<span class="material-symbols-outlined text-white/30 group-hover:text-kinetic transition-colors text-xl" data-icon="extension" style="">extension</span>
+<span class="text-[10px] text-white/30 group-hover:text-white transition-colors" style="">插件</span>
+</button>
+<button class="flex flex-col items-center gap-1 group" style="">
+<span class="material-symbols-outlined text-white/30 group-hover:text-kinetic transition-colors text-xl" data-icon="restart_alt" style="">restart_alt</span>
+<span class="text-[10px] text-white/30 group-hover:text-white transition-colors" style="">重启</span>
+</button>
+<button class="flex flex-col items-center gap-1 group" style="">
+<span class="material-symbols-outlined text-white/30 group-hover:text-red-400 transition-colors text-xl" data-icon="power_settings_new" style="">power_settings_new</span>
+<span class="text-[10px] text-white/30 group-hover:text-white transition-colors" style="">退出</span>
+</button>
+</div>
+</section>
+</aside>
+<!-- Background Content Mock (Representing original screen behind drawer) -->
+<main class="mt-20 px-4 max-w-2xl mx-auto space-y-6 opacity-10 pointer-events-none">
+<section class="py-4">
+<h1 class="font-space-grotesk text-2xl font-bold text-white tracking-tight" style="">权限与服务管理</h1>
+<p class="text-white/40 text-sm mt-1 uppercase tracking-widest font-space-grotesk" style="">System Configuration &amp; Permissions</p>
+</section>
+<div class="tech-border tech-card p-4 rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded bg-white/5 border border-white/10"></div>
+<div><div class="w-24 h-4 bg-white/10 rounded"></div></div>
+</div>
+</div>
+</main>
+</body></html>
