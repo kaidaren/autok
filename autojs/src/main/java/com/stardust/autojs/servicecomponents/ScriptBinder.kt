@@ -15,6 +15,10 @@ import com.stardust.autojs.core.shizuku.ShizukuClient
 import com.stardust.autojs.execution.ExecutionConfig
 import com.stardust.autojs.script.ScriptFile
 import com.stardust.autojs.script.ScriptSource
+import com.stardust.autojs.script.JavaScriptSource
+import com.stardust.autojs.script.JavaScriptFileSource
+import com.aiselp.autox.engine.NodeScriptSource
+import com.aiselp.autox.engine.NodeScriptEngine
 import com.stardust.notification.NotificationListenerService
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.CoroutineScope
@@ -79,7 +83,15 @@ class ScriptBinder(service: IndependentScriptService, val scope: CoroutineScope)
             ExecutionConfig.fromJson(it)
         }
         Log.d(TAG, "engineName = ${taskInfo.engineName}")
-        val source: ScriptSource = ScriptFile(taskInfo.sourcePath).toSource()
+        val scriptFile = ScriptFile(taskInfo.sourcePath)
+        // Respect engineName provided by remote caller (e.g. VSCode devplugin).
+        // ScriptFile.toSource() infers engine by file suffix; for remote execution we must be able
+        // to force Rhino(JavaScriptSource) so Auto.js global APIs (className/text/...) exist.
+        val source: ScriptSource = when (taskInfo.engineName) {
+            JavaScriptSource.ENGINE -> JavaScriptFileSource(scriptFile)
+            NodeScriptEngine.ID -> NodeScriptSource(scriptFile)
+            else -> scriptFile.toSource()
+        }
         AutoJs.instance.scriptEngineService.execute(
             source, listener,
             config ?: ExecutionConfig(workingDirectory = taskInfo.workerDirectory)
