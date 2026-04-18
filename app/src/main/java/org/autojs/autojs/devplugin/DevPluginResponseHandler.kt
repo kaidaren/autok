@@ -124,10 +124,13 @@ class DevPluginResponseHandler(private val cacheDir: File) : Handler {
             try {
                 val globalConnection = ScriptServiceConnection.GlobalConnection
                 globalConnection.bind(GlobalAppContext.get())
-                val engineName = when (file.extension) {
-                    "mjs" -> NodeScriptEngine.ID
-                    else -> JavaScriptSource.ENGINE
-                }
+                // Auto.js accessibility selector APIs (className/text/id/...) are only available
+                // in the Rhino-based JavaScript engine runtime. VSCode remote-run scripts are
+                // expected to run with that runtime by default.
+                //
+                // If a user wants to run Node/V8 scripts, that should be an explicit opt-in
+                // (e.g. a different command), otherwise "className is not defined" will occur.
+                val engineName = JavaScriptSource.ENGINE
                 val taskInfo = object : TaskInfo {
                     override val id: Int = 0
                     override val name: String = file.name
