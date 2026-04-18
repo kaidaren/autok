@@ -2,6 +2,29 @@
 autoxjs 整个项目的一些更新日志,双版本号为稳定版（内容以修复的bug为主），单版本号为激进版本、发布新内容。
 
 ## [Unreleased](https://github.com/kkevsekk1/AutoX/compare/7.0.5...HEAD) 未发布
+
+### 2026-04-19 VSCode 远程执行稳定性修复（setup-v7）
+
+#### 修复内容（详细）
+- 修复 VSCode 远程 `run` 脚本执行链路，强制经由脚本服务进程分发，避免主进程路径导致运行环境不一致。
+- 修复脚本引擎选择链路，确保远程 `.js` 在需要时按 Rhino 路径执行，避免选择器全局 API 丢失。
+- 修复脚本服务侧对 `engineName` 的处理，按请求引擎构造 `ScriptSource`，不再被文件后缀隐式覆盖。
+- 修复远程运行时 `init.js` 选择器全局注入兜底逻辑：兼容 `runtime.selector` 为函数或对象两种形态，确保 `className()/id()/text()` 可绑定到全局。
+
+#### 影响范围
+- 影响模块：`devplugin`、`ScriptBinder`、`autojs runtime init`。
+- 影响场景：VSCode 连接手机后的远程执行（`command: run`）。
+- 不影响：悬浮窗显示与“布局范围分析”既有修复链路（本次未修改相关代码）。
+
+#### 用户可见现象变化
+- 远程执行 `className("android.widget.TextView")...` 不再出现 `ReferenceError: "className" 未定义`。
+- 远程脚本在无障碍已开启场景下，运行环境更一致，减少“已启用但未运行”类误报。
+
+#### 关联提交
+- `01e82479` fix(devplugin): run VSCode scripts in Rhino runtime
+- `a271c3e9` fix(script-service): respect engineName for remote run
+- `8886746a` fix(vscode-remote): bind selector globals reliably in init runtime
+
 ## [7.2.1] - 2025-12-21
 修复一些问题
 

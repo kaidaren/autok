@@ -1,0 +1,60 @@
+# 每次更新代码推送到 GitHub（默认工作流）
+
+本项目的默认远程仓库已设置为用户自己的 GitHub：
+
+- **fork 仓库地址（用户仓库）**：`https://github.com/kaidaren/autok`
+- **上游仓库地址（社区仓库）**：`https://github.com/autox-community/AutoX_aiselp`
+
+- `origin`: `https://github.com/kaidaren/autok.git`
+- `upstream`: `https://github.com/autox-community/AutoX_aiselp.git`（仅用于拉取上游，不作为默认推送）
+
+## 每次更新代码后的标准操作（必须）
+
+在仓库根目录执行：
+
+1) 查看变更
+
+- `git status`
+- `git diff`
+- `git log -n 5 --oneline`（用于保持提交风格一致）
+
+2) **先更新变更日志（强制）**
+
+- 每次准备 `git commit` 前，必须先更新 `CHANGELOG.md` 的 `Unreleased`。
+- 日志内容必须包含以下四项（不可省略）：
+  - 改了什么（功能/修复点逐条列出）
+  - 为什么改（触发问题或需求背景）
+  - 影响范围（模块、场景、是否影响既有功能）
+  - 验证方式（编译、命令、实机或回归结果）
+- 若一次提交涉及多个子修复，需分别写成子条目，避免“修复一些问题”这类模糊描述。
+
+3) 暂存全部变更（包含新增文件）
+
+- `git add -A`
+
+4) 提交（写清楚改动目的）
+
+- `git commit -m "feat/fix/chore: <简要说明>"`
+
+5) 推送到 GitHub（默认推送到 `origin`）
+
+- `git push`
+
+6) 推送后核对（强制）
+
+- 打开 GitHub 仓库对应分支，确认本次 commit 可见。
+- 确认 `CHANGELOG.md` 已随本次提交一同推送。
+- 若未包含日志，视为流程未完成，必须补提并再次推送。
+
+## 分支与跟踪约定
+
+- 当前主要工作分支为 `setup-v7`
+- 本地 `setup-v7` 跟踪 `origin/setup-v7`，因此 `git push` 无需额外参数
+
+## 常见注意事项
+
+- 若推送出现大文件警告（>50MB），优先评估是否需要 Git LFS，或移除不必要的大资源文件再提交。
+- 如果需要同步上游更新，使用：
+  - `git fetch upstream`
+  - `git merge upstream/setup-v7`（或按需要选择 rebase）
+- 禁止只推代码不写更新日志；日志是恢复与回溯的主依据。
