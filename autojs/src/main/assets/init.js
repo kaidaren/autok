@@ -204,11 +204,25 @@ runtime.init();
         }
     }
 
+    function resolveSelectorObject() {
+        if (global.selector) return global.selector;
+        if (global.$selector) return global.$selector;
+        if (!runtime) return null;
+        try {
+            // In some remote execution paths runtime.selector may be a method, not an object.
+            if (typeof runtime.selector === "function") {
+                return runtime.selector();
+            }
+        } catch (e) {
+        }
+        return runtime.selector || null;
+    }
+
     // Common doc globals fallback map for remote/runtime edge cases.
     (function ensureDocGlobals() {
         var autoObj = global.automator || global.$automator || runtime.automator;
         var appObj = global.app || global.$app || runtime.app;
-        var selObj = global.selector || global.$selector || runtime.selector;
+        var selObj = resolveSelectorObject();
         var imagesObj = global.images || global.$images;
         var keys = [
             "click", "longClick", "press", "swipe",
@@ -289,7 +303,7 @@ runtime.init();
         }
         var autoObj = global.automator || global.$automator || runtime.automator;
         var appObj = global.app || global.$app || runtime.app;
-        var selectorObj = global.selector || global.$selector || runtime.selector;
+        var selectorObj = resolveSelectorObject();
         var imagesObj = global.images || global.$images;
         var filesObj = global.files || global.$files || runtime.files;
         var timersObj = global.timers || global.$timers;
