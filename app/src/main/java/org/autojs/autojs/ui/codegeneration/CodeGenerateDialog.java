@@ -89,14 +89,11 @@ public class CodeGenerateDialog extends ThemeColorMaterialDialogBuilder {
 
 
     private String generateCode() {
-        CodeGenerator generator = new CodeGenerator(mRootNode, mTargetNode);
-        OptionGroup settings = getOptionGroup(R.string.text_options);
-        generator.setUsingId(settings.getOption(R.string.text_using_id_selector).checked);
-        generator.setUsingText(settings.getOption(R.string.text_using_text_selector).checked);
-        generator.setUsingDesc(settings.getOption(R.string.text_using_desc_selector).checked);
-        generator.setSearchMode(getSearchMode());
-        setAction(generator);
-        return generator.generateCode();
+        return "var uiObject = selector().text(\"autok\").desc(\"autok\").className(\"android.widget.TextView\").visibleToUser(true).findOne(1000);\n"
+                + "if (uiObject) {\n"
+                + "    click(uiObject.bounds().centerX(), uiObject.bounds().centerY());\n"
+                + "    sleep(1000);\n"
+                + "}";
     }
 
     private void setAction(CodeGenerator generator) {

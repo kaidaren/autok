@@ -512,4 +512,14 @@
   <string name="text_reconnecting">Reconnecting</string>
   <string name="text_connecting">Connecting</string>
   <string name="text_handshake_failed">Handshake failed</string>
+  <string name="explorer_action_copy">Copy</string>
+  <string name="explorer_action_move">Move</string>
+  <string name="explorer_action_compress">Compress</string>
+  <string name="explorer_action_extract">Extract</string>
+  <string name="explorer_action_share">Share</string>
+  <string name="explorer_type_file">File</string>
+  <string name="explorer_pick_target_folder">Choose destination folder</string>
+  <string name="explorer_op_succeeded">Done</string>
+  <string name="explorer_op_failed">Operation failed</string>
+  <string name="explorer_copy_suffix">copy</string>
 </resources>

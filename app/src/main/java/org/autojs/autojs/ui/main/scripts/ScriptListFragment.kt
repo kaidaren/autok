@@ -10,6 +10,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +21,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -66,6 +68,8 @@ import android.content.BroadcastReceiver
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
+import android.os.Environment
+import android.os.StatFs
 import android.provider.Settings
 import android.text.format.Formatter
 import com.aiselp.autox.ui.material3.components.BaseDialog
@@ -108,6 +112,7 @@ class ScriptListFragment : Fragment() {
 
     val explorerView by lazy { ExplorerViewKt(this.requireContext()) }
     private var createReceiver: BroadcastReceiver? = null
+    private var currentDirPath by mutableStateOf("")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -444,20 +449,182 @@ class ScriptListFragment : Fragment() {
             }
         }
         Spacer(modifier = Modifier.height(10.dp))
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = "脚本库",
-                color = Color(0xFFF1F3FC),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "根目录 / 脚本 / 第一卷",
-                color = Color(0xFFA8ABB3),
-                fontSize = 9.sp
-            )
+        Text(
+            text = "脚本库",
+            color = Color(0xFFF1F3FC),
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+        ScriptFileBreadcrumbBar(
+            rootPath = explorerView.workspaceRootPath,
+            currentPath = currentDirPath,
+            onJump = { path ->
+                if (!explorerView.jumpToDirectory(path)) {
+                    showSnackbarText(explorerView, "无法跳转到该目录")
+                }
+            }
+        )
+    }
+
+    @Composable
+    private fun ScriptFileBreadcrumbBar(
+        rootPath: String?,
+        currentPath: String,
+        onJump: (String) -> Unit
+    ) {
+        val segments = remember(rootPath, currentPath) {
+            buildBreadcrumbSegments(rootPath, currentPath)
         }
+        val sepColor = Color(0xFF5C636E)
+        val crumbColor = Color(0xFFF1F3FC)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                modifier = Modifier
+                    .weight(1f)
+                    .horizontalScroll(rememberScrollState()),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (segments.isEmpty()) {
+                    Text(
+                        text = "…",
+                        color = crumbColor,
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(vertical = 6.dp)
+                    )
+                }
+                segments.forEachIndexed { index, seg ->
+                    if (index > 0) {
+                        Text(
+                            text = "/",
+                            color = sepColor,
+                            fontSize = 12.sp,
+                            modifier = Modifier.padding(vertical = 6.dp)
+                        )
+                    }
+                    Text(
+                        text = seg.label,
+                        color = crumbColor,
+                        fontSize = 12.sp,
+                        fontWeight = if (index == segments.lastIndex) FontWeight.SemiBold else FontWeight.Normal,
+                        modifier = Modifier
+                            .clickable { onJump(seg.path) }
+                            .padding(vertical = 6.dp)
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            StorageUsageCompact()
+        }
+    }
+
+    @Composable
+    private fun StorageUsageCompact() {
+        val percent by produceState(initialValue = 0) {
+            while (true) {
+                value = primaryStorageUsedPercent()
+                delay(5000)
+            }
+        }
+        Card(
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF121820)),
+            border = BorderStroke(1.dp, Color(0x3344484F)),
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            Row(
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_performance),
+                    contentDescription = null,
+                    modifier = Modifier.size(14.dp),
+                    tint = Color(0xFF00F4FE)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = "$percent%",
+                    color = Color(0xFFF1F3FC),
+                    fontSize = 11.sp
+                )
+            }
+        }
+    }
+
+    private data class BreadcrumbSegment(val label: String, val path: String)
+
+    private fun canonicalPathParts(absolutePath: String): List<String> {
+        return absolutePath.trimEnd(File.separatorChar)
+            .split(File.separatorChar)
+            .filter { it.isNotBlank() }
+    }
+
+    /**
+     * 资源管理器树顶（用于面包屑与 [ExplorerViewKt.jumpToDirectory]），优先 `/storage` 以便能逐级点到 `emulated/0/...`。
+     */
+    private fun explorerNavigationRootPath(): String {
+        val storage = File("/storage")
+        if (storage.isDirectory) {
+            return runCatching { storage.canonicalFile }.getOrDefault(storage.absoluteFile).path
+        }
+        val ext = Environment.getExternalStorageDirectory()
+        if (ext != null) {
+            return runCatching { ext.canonicalFile }.getOrDefault(ext.absoluteFile).path
+        }
+        return File(Pref.getScriptDirPath()).let {
+            runCatching { it.canonicalFile }.getOrDefault(it.absoluteFile).path
+        }
+    }
+
+    private fun defaultListDirectoryPath(): String {
+        val ext = Environment.getExternalStorageDirectory()
+        if (ext != null) {
+            return runCatching { ext.canonicalFile }.getOrDefault(ext.absoluteFile).path
+        }
+        return File(Pref.getScriptDirPath()).let {
+            runCatching { it.canonicalFile }.getOrDefault(it.absoluteFile).path
+        }
+    }
+
+    private fun buildBreadcrumbSegments(rootPath: String?, currentPath: String): List<BreadcrumbSegment> {
+        if (rootPath.isNullOrBlank()) return emptyList()
+        val root = File(rootPath)
+        val cur = File(if (currentPath.isBlank()) rootPath else currentPath)
+        val rootC = runCatching { root.canonicalFile }.getOrDefault(root.absoluteFile)
+        val curC = runCatching { cur.canonicalFile }.getOrDefault(cur.absoluteFile)
+        val underRoot = curC.path == rootC.path ||
+            curC.path.startsWith(rootC.path + File.separator)
+        if (!underRoot) {
+            return listOf(BreadcrumbSegment(curC.path, curC.path))
+        }
+        val rootParts = canonicalPathParts(rootC.path)
+        val curParts = canonicalPathParts(curC.path)
+        if (rootParts.isEmpty() || curParts.isEmpty() ||
+            curParts.size < rootParts.size ||
+            rootParts.indices.any { i -> curParts[i] != rootParts[i] }
+        ) {
+            return listOf(BreadcrumbSegment(curC.path, curC.path))
+        }
+        val out = mutableListOf<BreadcrumbSegment>()
+        for (i in (rootParts.size - 1) until curParts.size) {
+            val cum = File.separator + curParts.subList(0, i + 1).joinToString(File.separator)
+            out.add(BreadcrumbSegment(curParts[i], cum))
+        }
+        return out
+    }
+
+    private fun primaryStorageUsedPercent(): Int {
+        return runCatching {
+            val dir = Environment.getExternalStorageDirectory() ?: return 0
+            val stat = StatFs(dir.path)
+            val total = stat.blockCountLong * stat.blockSizeLong
+            if (total <= 0) return 0
+            val free = stat.availableBlocksLong * stat.blockSizeLong
+            (((total - free) * 100L) / total).toInt().coerceIn(0, 100)
+        }.getOrDefault(0)
     }
 
     @Composable
@@ -736,10 +903,27 @@ class ScriptListFragment : Fragment() {
                 requireContext()
             )
         )
-        setExplorer(
-            Explorers.workspace(),
-            ExplorerDirPage.createRoot(Pref.getScriptDirPath())
-        )
+        val navRoot = explorerNavigationRootPath()
+        val openAt = defaultListDirectoryPath()
+        val openDir = File(openAt)
+        val navRootFile = File(navRoot)
+        val underNav = openDir.path == navRootFile.path ||
+            openDir.path.startsWith(navRootFile.path + File.separator)
+        if (underNav) {
+            setExplorer(
+                Explorers.workspace(),
+                ExplorerDirPage.createRoot(navRoot),
+                ExplorerDirPage(openDir, null)
+            )
+        } else {
+            setExplorer(
+                Explorers.workspace(),
+                ExplorerDirPage.createRoot(navRoot)
+            )
+        }
+        setOnPageChangedListener { page ->
+            currentDirPath = page?.path ?: defaultListDirectoryPath()
+        }
         setOnItemClickListener { _, item ->
             item?.let {
                 if (item.isEditable) {
@@ -789,6 +973,12 @@ class ScriptListFragment : Fragment() {
         private fun showSnackbar(view: View, res: Int) {
             Snackbar.make(
                 view, res, Snackbar.LENGTH_SHORT
+            ).show()
+        }
+
+        private fun showSnackbarText(view: View, text: String) {
+            Snackbar.make(
+                view, text, Snackbar.LENGTH_SHORT
             ).show()
         }
     }

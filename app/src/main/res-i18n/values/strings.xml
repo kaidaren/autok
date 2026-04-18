@@ -562,4 +562,14 @@
     <string name="special_permissions_configuration_desc">勾选以下权限要求会让打包的app启动时向用户申请并取得权限后才能运行</string>
     <string name="text_is_not_executable">文件无法运行</string>
     <string name="memory_usage">内存使用量</string>
+    <string name="explorer_action_copy">复制</string>
+    <string name="explorer_action_move">移动</string>
+    <string name="explorer_action_compress">压缩</string>
+    <string name="explorer_action_extract">解压</string>
+    <string name="explorer_action_share">分享</string>
+    <string name="explorer_type_file">文件</string>
+    <string name="explorer_pick_target_folder">选择目标文件夹</string>
+    <string name="explorer_op_succeeded">操作成功</string>
+    <string name="explorer_op_failed">操作失败</string>
+    <string name="explorer_copy_suffix">副本</string>
 </resources>

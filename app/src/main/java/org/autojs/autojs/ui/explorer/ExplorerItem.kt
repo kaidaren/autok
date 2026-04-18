@@ -13,9 +13,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,6 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.Image
 import org.autojs.autojs.ui.filechooser.FileChooseListView
 import org.autojs.autoxjs.R
 
@@ -71,64 +74,90 @@ fun FileInfo(modifier: Modifier = Modifier, name: String, desc: String) {
 }
 
 @Composable
-fun ExplorerItem(
-    item: ExplorerViewKt.ExplorerItemViewHolder,
-    optionMenuContent: @Composable () -> Unit,
+fun ExplorerListRow(
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    showCheckbox: Boolean,
+    leadingIcon: @Composable () -> Unit,
+    name: String,
+    typeLabel: String,
+    dateLabel: String,
+    onRowClick: () -> Unit,
+    showMore: Boolean,
+    onMoreClick: () -> Unit,
 ) {
-    val config = LocalExplorerItemConfig.current
-    Row(
-        Modifier
+    ElevatedCard(
+        modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 9.dp)
-            .clickable { item.onItemClick() },
-        verticalAlignment = Alignment.CenterVertically
+            .padding(horizontal = 4.dp, vertical = 4.dp),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = Color(0xFF2A3038),
+            contentColor = Color(0xFFF1F3FC)
+        )
     ) {
-        FileIcon(item.firstChar, item.firstCharBackground)
-        Spacer(Modifier.width(16.dp))
-        FileInfo(modifier = Modifier.weight(1f), name = item.name, desc = item.desc)
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            val tint = Color(0xFFA9AAAB)
-            val modifier = Modifier
-                .height(40.dp)
-                .width(35.dp)
-                .clip(RoundedCornerShape(32.dp))
-            val iconModifier = Modifier.size(18.dp)
-            if (item.runVisibility && config.showRun) Box(
-                modifier.clickable { item.run() },
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    modifier = iconModifier,
-                    painter = painterResource(R.drawable.ic_run_gray),
-                    contentDescription = null,
-                    tint = tint
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (showCheckbox) {
+                Checkbox(
+                    checked = checked,
+                    onCheckedChange = onCheckedChange
                 )
+                Spacer(Modifier.width(4.dp))
             }
-            if (item.editVisibility && config.showEdit) Box(
-                modifier.clickable { item.edit() },
-                contentAlignment = Alignment.Center
+            leadingIcon()
+            Spacer(Modifier.width(10.dp))
+            Column(
+                Modifier
+                    .weight(1f)
+                    .clickable(onClick = onRowClick)
             ) {
-                Icon(
-                    modifier = iconModifier,
-                    painter = painterResource(R.drawable.ic_mode_edit_black_24dp),
-                    contentDescription = null,
-                    tint = tint
+                Text(
+                    text = name,
+                    color = Color(0xFFF1F3FC),
+                    fontSize = 15.sp,
+                    maxLines = 1
                 )
-            }
-            if (config.showMore) Box(
-                modifier.clickable { item.showMenu = true },
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    modifier = iconModifier,
-                    painter = painterResource(R.drawable.ic_more_vert_black_24dp),
-                    contentDescription = null,
-                    tint = tint
+                Text(
+                    text = typeLabel,
+                    color = Color(0xFFA8ABB3),
+                    fontSize = 11.sp,
+                    maxLines = 1
                 )
+                if (dateLabel.isNotEmpty()) {
+                    Text(
+                        text = dateLabel,
+                        color = Color(0xFFA8ABB3),
+                        fontSize = 11.sp,
+                        maxLines = 1
+                    )
+                }
             }
-            optionMenuContent()
+            if (showMore) {
+                IconButton(onClick = onMoreClick) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_more_vert_black_24dp),
+                        contentDescription = null,
+                        tint = Color(0xFF9E9E9E),
+                        modifier = Modifier.size(22.dp)
+                    )
+                }
+            }
         }
     }
+}
+
+@Composable
+fun ExplorerDirectoryRowLeading(iconRes: Int) {
+    Image(
+        painter = painterResource(iconRes),
+        contentDescription = null,
+        modifier = Modifier.size(40.dp)
+    )
 }
 
 @Composable
@@ -136,14 +165,23 @@ fun FileChooseExplorerItem(item: FileChooseListView.ExplorerItemViewHolder) {
     Row(
         Modifier
             .fillMaxWidth()
-            .padding(horizontal = 9.dp)
-            .clickable { item.onCheckedChanged() },
+            .padding(horizontal = 9.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        Checkbox(
+            checked = item.checked,
+            onCheckedChange = { item.onCheckedChanged() }
+        )
+        Spacer(Modifier.width(8.dp))
         FileIcon(item.firstChar, item.firstCharBackground)
-        Spacer(Modifier.width(16.dp))
-        FileInfo(modifier = Modifier.weight(1f), name = item.name, desc = item.desc)
-        Checkbox(checked = item.checked, onCheckedChange = { item.onCheckedChanged() })
+        Spacer(Modifier.width(12.dp))
+        FileInfo(
+            modifier = Modifier
+                .weight(1f)
+                .clickable { item.onCheckedChanged() },
+            name = item.name,
+            desc = item.desc
+        )
     }
 }
 
@@ -221,8 +259,8 @@ fun CategoryItem(holder: ExplorerViewKt.CategoryViewHolder, options: @Composable
 
 
 data class ExplorerItemConfig(
-    val showRun: Boolean = true,
-    val showEdit: Boolean = true,
+    val showRun: Boolean = false,
+    val showEdit: Boolean = false,
     val showMore: Boolean = true
 )
 
